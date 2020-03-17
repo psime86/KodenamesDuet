@@ -28,8 +28,8 @@ module.exports = function(app) {
     res.sendFile(path.join(__dirname, "../public/game.html"));
   })
 
-  // Render 404 page for any unmatched routes
+//   // Render 404 page for any unmatched routes
   app.get("*", function(req, res) {
-    res.render("404");
+    res.sendFile(path.join(__dirname, "../pulbic/404.html"));
   });
 };
