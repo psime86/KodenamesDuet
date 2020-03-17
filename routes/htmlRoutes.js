@@ -1,3 +1,4 @@
+var path = require("path");
 // var db = require("../models");
 module.exports = function(app) {
 //   // Load index page
@@ -22,6 +23,10 @@ module.exports = function(app) {
   app.get('/', function(req, res) {
     res.sendFile(__dirname + '/index.html');
   });
+
+  app.get('/game', function(req, res) {
+    res.sendFile(path.join(__dirname, "../public/game.html"));
+  })
 
   // Render 404 page for any unmatched routes
   app.get("*", function(req, res) {

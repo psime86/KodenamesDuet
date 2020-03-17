@@ -12,11 +12,11 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 app.use(express.static("public"));
 
-
-io.on('connection', function(socket){
-  console.log('a user connected');
+var nsp = io.of('/game');
+nsp.on('connection', function(socket){
+  console.log('someone connected');
   socket.on('chat message', function(msg) {
-      io.emit('chat message', msg)
+      nsp.emit('chat message', msg)
       console.log('message: ' + msg);
   })
 })
