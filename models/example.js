@@ -1,6 +1,6 @@
 module.exports = function(sequelize, DataTypes) {
   var gameWords = sequelize.define("Words", {
-    text: DataTypes.STRING
+    word: DataTypes.STRING
   });
   return Example;
 };
