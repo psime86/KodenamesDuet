@@ -1,99 +1,46 @@
-// Get references to page elements
-var $exampleText = $("#example-text");
-var $exampleDescription = $("#example-description");
-var $submitBtn = $("#submit");
-var $exampleList = $("#example-list");
+$(document).ready(function(){
 
-// The API object contains methods for each kind of request we'll make
-var API = {
-  saveExample: function(example) {
-    return $.ajax({
-      headers: {
-        "Content-Type": "application/json"
-      },
-      type: "POST",
-      url: "api/examples",
-      data: JSON.stringify(example)
-    });
-  },
-  getExamples: function() {
-    return $.ajax({
-      url: "api/examples",
-      type: "GET"
-    });
-  },
-  deleteExample: function(id) {
-    return $.ajax({
-      url: "api/examples/" + id,
-      type: "DELETE"
-    });
-  }
-};
+var cards = $(".back");
 
-// refreshExamples gets new examples from the db and repopulates the list
-var refreshExamples = function() {
-  API.getExamples().then(function(data) {
-    var $examples = data.map(function(example) {
-      var $a = $("<a>")
-        .text(example.text)
-        .attr("href", "/example/" + example.id);
+var redTeam = document.createElement("img");
+redTeam.src = "'images/red-spy.jpg' style='width: 100%; height: 100%;'>";
 
-      var $li = $("<li>")
-        .attr({
-          class: "list-group-item",
-          "data-id": example.id
-        })
-        .append($a);
+var bystander = document.createElement("img");
+bystander.src = "'images/bystander.jpg' style='width: 100%; height: 100%;'>";
 
-      var $button = $("<button>")
-        .addClass("btn btn-danger float-right delete")
-        .text("ｘ");
+var blueTeam = document.createElement("img");
+blueTeam.src = "'images/blue-spy.jpg' style='width: 100%; height: 100%;'>";
 
-      $li.append($button);
+var assassin = document.createElement("img");
+assassin.src = "'images/black-spy.jpg' style='width: 100%; height: 100%;'>";
 
-      return $li;
-    });
+  
+  //create teams
+	for (var i = 0; i < 8; i++) {
+		cards.append(redTeam);
+		cards.append(blueTeam);
+	}
 
-    $exampleList.empty();
-    $exampleList.append($examples);
-  });
-};
+	// // one extra for one of the teams
+	// if (Math.floor(Math.random() * data.length) % 2 === 0) {
+	// 	cards.append(redTeam);
+	// 	$('#board').addClass('redStarts').removeClass('blueStarts');
 
-// handleFormSubmit is called whenever we submit a new example
-// Save the new example to the db and refresh the list
-var handleFormSubmit = function(event) {
-  event.preventDefault();
+	// } else {
+	// 	cards.append(blueTeam);
+	// 	$('#board').addClass('blueStarts').removeClass('redStarts');
+	// }
 
-  var example = {
-    text: $exampleText.val().trim(),
-    description: $exampleDescription.val().trim()
-  };
+	// add neturals 
+	for (var i = 0; i < 7; i++) {
+		cards.append(bystander);
+	}
 
-  if (!(example.text && example.description)) {
-    alert("You must enter an example text and description!");
-    return;
-  }
+	// push the assasin
+	cards.append(assasin);
 
-  API.saveExample(example).then(function() {
-    refreshExamples();
-  });
-
-  $exampleText.val("");
-  $exampleDescription.val("");
-};
-
-// handleDeleteBtnClick is called when an example's delete button is clicked
-// Remove the example from the db and refresh the list
-var handleDeleteBtnClick = function() {
-  var idToDelete = $(this)
-    .parent()
-    .attr("data-id");
-
-  API.deleteExample(idToDelete).then(function() {
-    refreshExamples();
-  });
-};
-
-// Add event listeners to the submit and delete buttons
-$submitBtn.on("click", handleFormSubmit);
-$exampleList.on("click", ".delete", handleDeleteBtnClick);
+// var cards = "<div class='back'><img src='images/blue-spy.jpg' style='width: 100%; height: 100%;'></div>"
+// for (var i = 0; i < 8; i++){
+//   $(".card m-3").push(cards);
+// }
+})
