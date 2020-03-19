@@ -1,7 +1,9 @@
 var express = require("express");
 var app = express();
-var http = require('http').createServer(app);
+var http = require('http').Server(app);
 var io = require('socket.io')(http);
+
+var rooms = 0
 
 // var db = require("./models");
 
@@ -11,16 +13,6 @@ var PORT = process.env.PORT || 3000;
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 app.use(express.static("public"));
-
-var nsp = io.of('/game');
-nsp.on('connection', function(socket){
-  console.log('someone connected');
-  socket.on('chat message', function(msg) {
-      nsp.emit('chat message', msg)
-      console.log('message: ' + msg);
-  })
-})
-
 
 // Routes
 require("./routes/apiRoutes")(app);
@@ -44,6 +36,10 @@ require("./routes/htmlRoutes")(app);
 //     );
 //   });
 // });
+
+io.on('connection', function(socket) {
+  console.log('A user connected')
+})
 
 app.listen(PORT, function(){
   console.log('listening on ' + PORT);
