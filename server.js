@@ -5,6 +5,25 @@ var io = require('socket.io')(server);
 // var exphbs = require("express-handlebars");
 
 var rooms = 0
+// var guessers = [];
+// var spymasters = [];
+
+// var roomPush = function() {
+
+//   let player = 1
+//   let n = Math.floor(Math.random())
+
+//   if (n === 0 && guessers.length < 2 ) {
+
+//     guessers.push(player)
+//     player++;
+
+//   } else {
+//     spymasters.push(player)
+//     player++;
+//   }
+
+// }
 
 // var db = require("./models");
 
@@ -47,7 +66,8 @@ require("./routes/htmlRoutes")(app);
 //   });
 // });
 
-io.on('connection', function (socket) {
+// var nsp = io.of('/codenames');
+  io.on('connection', function (socket) {
   // create new game room, notify creator of room. 
   socket.on('createGame', function (data) {
     socket.join(`room-${++rooms}`);
@@ -58,6 +78,9 @@ io.on('connection', function (socket) {
     var room = io.nsps['/'].adapter.rooms[data.room]
     if (room && room.length === 1) {
       socket.join(data.room);
+
+      // if (room.length === 4) {
+      // }
       socket.broadcast.to(data.room).emit('player1', {});
       socket.emit('player2', { name: data.name, room: data.room })
     } else {
@@ -78,5 +101,5 @@ io.on('connection', function (socket) {
 
 });
 
-server.listen(process.env.PORT || 5000, function() {
+server.listen(process.env.PORT || 3000, function() {
     console.log(`listening on ${PORT}`)});
