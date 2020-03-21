@@ -1,11 +1,8 @@
 var express = require("express");
-<<<<<<< HEAD
 var app = express();
-var http = require('http').Server(app);
-var io = require('socket.io')(http);
-=======
+var server = require('http').Server(app);
+var io = require('socket.io')(server);
 // var exphbs = require("express-handlebars");
->>>>>>> 5ce3b1a5d285853d17a6147a0e67d65d285e1383
 
 var rooms = 0
 
@@ -18,8 +15,6 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 app.use(express.static("public"));
 
-<<<<<<< HEAD
-=======
 // Handlebars
 // app.engine(
 //   "handlebars",
@@ -29,7 +24,6 @@ app.use(express.static("public"));
 // );
 // app.set("view engine", "handlebars");
 
->>>>>>> 5ce3b1a5d285853d17a6147a0e67d65d285e1383
 // Routes
 require("./routes/apiRoutes")(app);
 require("./routes/htmlRoutes")(app);
@@ -53,15 +47,36 @@ require("./routes/htmlRoutes")(app);
 //   });
 // });
 
-io.on('connection', function(socket) {
-  console.log('A user connected')
-})
+io.on('connection', function (socket) {
+  // create new game room, notify creator of room. 
+  socket.on('createGame', function (data) {
+    socket.join(`room-${++rooms}`);
+    socket.emit('newGame', { name: data.name, room: `room-${rooms}` });
+  });
 
-app.listen(PORT, function(){
-  console.log('listening on ' + PORT);
-})
+  socket.on('joinGame', function (data) {
+    var room = io.nsps['/'].adapter.rooms[data.room]
+    if (room && room.length === 1) {
+      socket.join(data.room);
+      socket.broadcast.to(data.room).emit('player1', {});
+      socket.emit('player2', { name: data.name, room: data.room })
+    } else {
+      socket.emit('err', { message: 'Sorry this room is full!' })
+    }
+  });
 
+  socket.on('playTurn', function(data) {
+    socket.broadcast.to(data.room).emit('turnPlayed', {
+      tile: data.tile,
+      room: data.room
+    });
+  });
 
+  socket.on('gameEnded', function(data) {
+    socket.broadcast.to(data.room).emit('gameEnded', data);
+  });
 
-module.exports = app;
+});
 
+server.listen(process.env.PORT || 5000, function() {
+    console.log(`listening on ${PORT}`)});
