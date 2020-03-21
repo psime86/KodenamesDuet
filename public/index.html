@@ -23,16 +23,38 @@
         <h5 class="card-header bg-warning">Sign In</h5>
         <div class="card-body">
             <h5 class="card-title">Please enter your nickname below.</h5>
-            <input class="form-control" type="text" placeholder="Nickname">
-            <input class="btn btn-danger mt-3" id="player-start" type="submit" value="Submit">
+            <input class="form-control" id='name' type="text" placeholder="Nickname">
+            <div class='row'>
+                <div class='col-2'>
+                <input class="btn btn-danger mt-3" id="player-start" type="submit" value="New Game">
+                </div>
+                <div class='col-2'>
+                <input class="btn btn-danger mt-3" id="player-join" type="submit" value="Join Game">
+                </div>
+                <div class='col-10-offset-1'>
+                <input style='display:none;' class="form-control m-3" id='game-id' type="text" placeholder="enter game ID here">
+                </div>
+            </div>
         </div>
     </div>
 
 </div>
-
-<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>    
+<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+crossorigin="anonymous"></script>
 <script src="https://cdn.rawgit.com/nnattawat/flip/master/dist/jquery.flip.min.js"></script>
+<script>
+$(".card").flip();
+</script>
+<script src="/socket.io/socket.io.js"></script>
+<script src="js/game.js"></script>
+<script src="js/socket.js"></script>
+
 </body>
 </html>
