@@ -21,7 +21,7 @@
               <a class="nav-link" href="index.html">Home<span class="sr-only">(current)</span></a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" data-toggle="modal" data-target="#exampleModalScrollable">Rules</a>
+              <a class="nav-link" data-toggle="modal" data-target="#rules-modal">Rules</a>
             </li>
             <li class="nav-item">
               <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
@@ -329,7 +329,29 @@
               The spymasters will be able to see 
             </div>
             <div class="modal-footer">
-              <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+              <button type="button" class="btn btn-danger" data-dismiss="modal" id="start-game">START GAME</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal fade" id="rules-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalScrollableTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-scrollable" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalScrollableTitle">CODENAMES RULES</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              Welcome to Codenames! 
+              Each team consists of two players: a spymaster (clue giver) and the agent (guesser).
+              The game board is a 5X5 grid of randomly generated words.  
+              The spymasters will be able to see 
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-danger" data-dismiss="modal">CLOSE</button>
             </div>
           </div>
         </div>
@@ -341,6 +363,9 @@
 <script src="https://cdn.rawgit.com/nnattawat/flip/master/dist/jquery.flip.min.js"></script>
 <script>
     $(".card").flip();
+    $(document).ready(function() {
+        $("#exampleModalScrollable").modal("show");
+    });
 </script>
 </body>
 </html>
