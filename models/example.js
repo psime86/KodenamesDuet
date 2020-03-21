@@ -1,7 +1,12 @@
-// module.exports = function(sequelize, DataTypes) {
-//   var Example = sequelize.define("Example", {
-//     text: DataTypes.STRING,
-//     description: DataTypes.TEXT
-//   });
-//   return Example;
-// };
+module.exports = function(sequelize, DataTypes) {
+  var gameWords = sequelize.define(
+    "Words",
+    {
+      word: DataTypes.STRING
+    },
+    {
+      timestamps: false
+    }
+  );
+  return gameWords;
+};
