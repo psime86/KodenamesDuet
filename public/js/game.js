@@ -1,50 +1,100 @@
-(function init() {
 // var socket = io.connect('http://name-of-heroku-app.herokuapp.com'),
-var socket = io.connect('http://localhost:3000');
+this.socket = io()
 
-var type = function() {
+red = []
+blue = []
+var player = {
+  team: teamColor,
+  role: rolePlayed,
+}
 
-  let n = Math.floor(Math.random())
+function Player(name, team, role, id) {
+  this.name = name;
+  this.team = team();
+  this.role = function() {
+    if (this.team === 'red') {
+      redRole()
+    }else {
+      blueRole()
+    }
+  }
+  this.id = socket.id
+  }
 
-  if (n === 0 && guessers.length < 2 ) {
+var team = function () {
+  if (Math.floor(Math.random() * 2) === 0 && red.length <= 1) {
 
-    let role = guesser
-    guessers.push(role)
-    return role
+    teamColor = "red";
+    return teamColor
+
 
   } else {
 
-    let role = spymaster
-    spymasters.push(role)
-    return role
+    teamColor = "blue"
+    return teamColor
   }
 
-}
+  var redRole = function () {
 
-class Player {
-    constructor(name, type) {
+    var checkRedRole = red.filter(function (role) {
+      return role.role == "spymaster"
+    });
+
+    if (Math.floor(Math.random() * 2) === 0 && checkRedRole.length <= 1) {
+
+      rolePlayed = "spymaster"
+
+    } else {
+
+      rolePlayed = "guesser"
+
+    }
+  }
+
+  var blueRole = function () {
+
+    var checkBlueRole = blue.filter(function (role) {
+      return role.role == "spymaster"
+    });
+
+    if (Math.floor(Math.random() * 2) === 0 && checkBlueRole.length <= 1) {
+
+      rolePlayed = "spymaster"
+
+    } else {
+
+      rolePlayed = "guesser"
+
+    }
+  }
+
+  function Player(name, team, role, id) {
       this.name = name;
-      this.type = type;
-      this.currentTurn = true;
-      this.playsArr = 0;
+      this.team = team();
+      this.role = function() {
+        if (this.team === 'red') {
+          redRole()
+        }else {
+          blueRole()
+        }
+      }
+      this.id = socket.id
+      }
     }
 
-
-
-  }
-  
-  $('#player-start').on('click', function() {
+  $('#player-start').on('click', function () {
     var name = $('#name').val();
     if (!name) {
       $('#user-message').text('Please enter your name!')
       return;
     }
-    socket.emit('createGame', { name });
-    player = new Player(name, role());
+    socket.emit('newGame', { name } )
+    player = new Player(name, )
+
   });
 
 
-$("#player-join").on('click', function() {
+  $("#player-join").on('click', function () {
     console.log('clicked')
     $("#game-id").css('display', 'inline')
     var name = $('#name').val();
@@ -53,24 +103,22 @@ $("#player-join").on('click', function() {
       return;
     }
     socket.emit('joinGame', { name, room: roomID });
-    player = new Player(name, role());
+    player = new Player(name, type());
   });
 
-    // New Game created by current client. Update the UI and create new Game var.
-    socket.on('newGame', function(data) {
-      console.log('new game created');
-      var message =
-        `Hello, ${data.name}. Please ask your friends to enter Game ID: 
+  // New Game created by current client. Update the UI and create new Game var.
+  socket.on('newGame', function (data) {
+    console.log('new game created');
+    var message =
+      `Hello, ${data.name}. Please ask your friends to enter Game ID: 
         ${data.room}. Waiting for players...`;
 
-        $("#user-message").text(message);
+    $("#user-message").text(message);
 
-      // Create game for player 1
-      game = new Game(data.room);
-      
-    });
+    // Create game for player 1
+    game = new Game(data.room);
 
-  }());
+  });
 
 
 
