@@ -1,0 +1,32 @@
+{
+    "sqltools.connections": [
+        {
+            "connectionTimeout": 60,
+            "database": "words_db",
+            "dialect": "MySQL",
+            "name": "MySQL",
+            "password": "password",
+            "port": 3306,
+            "server": "127.0.0.1",
+            "username": "root"
+        },
+        {
+            "database": "words_db",
+            "dialect": "MySQL",
+            "name": "MySQL",
+            "password": "password",
+            "port": 3306,
+            "server": "localhost",
+            "username": "root"
+        },
+        {
+            "database": "words_db",
+            "dialect": "MySQL",
+            "name": "words",
+            "password": "password",
+            "port": 3306,
+            "server": "localhost",
+            "username": "root"
+        }
+    ]
+}
