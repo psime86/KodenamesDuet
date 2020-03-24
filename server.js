@@ -34,11 +34,6 @@ require("./routes/htmlRoutes")(app);
   socket.on('disconnect', function() {
     console.log('user disconneted')
     io.emit('disconnect', socket.id);
-  })
-  socket.on('createGame', function (data) {
-
-    socket.join(`room-${++rooms}`);
-    socket.emit('newGame', { name: data.name, room: `room-${rooms}` });
   });
 
   socket.on('joinGame', function (data) {
@@ -50,6 +45,18 @@ require("./routes/htmlRoutes")(app);
       socket.emit('player', { name: data.name, room: data.room })
     } else {
       socket.emit('err', { message: 'Sorry this room is full!' })
+    }
+  });
+
+  socket.on('startGame', function(data) {
+    for (i=0; i < data.players.length; i++ ) {
+      if (data.players.role === 'spymaster') {
+        room = "/codenames/spymaster"
+        socket.join(room)
+      } else {
+        room = '/codenames/guesser'
+        socket.join(room)
+      }
     }
   });
 
