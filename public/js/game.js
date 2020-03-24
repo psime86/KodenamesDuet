@@ -3,19 +3,40 @@ $("#player-join").on('click', function() {
     $("#game-id").css('display', 'inline')
 });
 
+$(document).ready(function() {
 
-var wordArray = [];
+    var cards = $(".card-title");
+
+    console.log(cards);
 
 
-$.get("/api/words", function(data) {
-    for (var i = 0; i < data.length; i++) {
-        wordArray.push(data[i].word);
-    }
-});
+    $.get("/api/words", function(data) {
+        for (var i = 0; i < data.length; i++) {
+           
+            $(cards[i]).html(data[i].word);
+        
+            
+        }
+        console.log(data);
 
-console.log(wordArray);
 
-for (i = 0; i < wordArray.length; i++) {
-    $(".card-title").text(wordArray[i]);
-}
-console.log(wordArray[i]);
+    });
+    
+    // console.log(wordArray);
+
+
+
+    // // var wordDisplay = document.getElementsByClassName("card-title");
+
+    // var wordDisplay  = $("#test9");
+
+    // $.each(wordArray, function() {
+    //     $(wordDisplay).append(this);
+    //     console.log(this);
+    // })
+
+})
+
+
+
+
