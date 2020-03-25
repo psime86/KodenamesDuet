@@ -24,10 +24,10 @@ require("./routes/htmlRoutes")(app);
   console.log('a user connected') 
 
   socket.on('createGame', function (data) {
-
+    console.log(data)
     socket.join(`room-${++rooms}`);
-    socket.emit('newGame', { name: data.name, room: `room-${rooms}` });
-    console.log({ name: data.name, room: `room-${rooms}` })
+    socket.emit('newGame', { name: data.players[0].name, team: data.players[0].team, role: data.players[0].role, room: `room-${rooms}` });
+    console.log({ name: data.players[0].name, team: data.players[0].team, role: data.players[0].role, room: `room-${rooms}` })
   });
 
   // when a player disconnects, remove them from our players object. 
@@ -39,28 +39,23 @@ require("./routes/htmlRoutes")(app);
   socket.on('joinGame', function (data) {
     console.log('this room joined')
     var room = io.nsps['/'].adapter.rooms[data.room]
-    if (room && room.length < 4) {
+    if (room && room.length === 1) {
       socket.join(data.room);
-      socket.broadcast.to(data.room).emit('player', {});
-      socket.emit('player', { name: data.name, room: data.room })
+      // socket.emit('player', { name: data.name, room: data.room })
+      // console.log(data)
+      var destination = '/codenames'
+      io.in(data.room).emit('redirect', destination)
+
     } else {
       socket.emit('err', { message: 'Sorry this room is full!' })
     }
   });
 
-  socket.on('startGame', function(data) {
-    for (i=0; i < data.players.length; i++ ) {
-      if (data.players.role === 'spymaster') {
-        room = "/codenames/spymaster"
-        socket.join(room)
-        res.redirect('/codenames')
-      } else {
-        room = '/codenames/guesser'
-        socket.join(room)
-        res.redirect('/codenames')
-      }
-    }
-  });
+  // socket.on('startGame', function(data) {
+  //   console.log(data)
+  //     var destination = '/game.html'
+  //     socket.broadcast.to(data.room).emit('redirect', destination)
+  // });
 
   socket.on('playTurn', function(data) {
     socket.broadcast.to(data.room).emit('turnPlayed', {
