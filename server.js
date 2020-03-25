@@ -53,9 +53,11 @@ require("./routes/htmlRoutes")(app);
       if (data.players.role === 'spymaster') {
         room = "/codenames/spymaster"
         socket.join(room)
+        res.redirect('/codenames')
       } else {
         room = '/codenames/guesser'
         socket.join(room)
+        res.redirect('/codenames')
       }
     }
   });

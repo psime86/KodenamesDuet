@@ -1,31 +1,68 @@
 // var socket = io.connect('http://name-of-heroku-app.herokuapp.com'),
+
 this.socket = io()
 
+var red = []
+var blue = []
 var players = []
-var spymasters = []
-var guessers = []
-function Player(id, name, role) {
+
+function Player(id, name) {
   this.id = id
   this.name = name;
-  this.team = team();
-  this.role = role
-}
+  this.team = function () {
 
-var team = function () {
-
-  var checkTeam = players.filter(function (team) {
-    return this.team == "red"
-  })
-  if (Math.floor(Math.random() * 2) === 0 && checkTeam.length <= 1) {
-
-    return "red"
-
-  } else {
-
-    return "blue"
-
+    var checkTeam = players.filter(function (team) {
+      return this.team == "red"
+    })
+    if (Math.floor(Math.random() * 2) === 0 && checkTeam.length <= 1) {
+      return "red"
+  
+    } else {
+      return "blue"
+    }
   }
+  this.role = function () {
 
+    if (this.team === 'red') {
+  
+      red.push(player)
+  
+      var checkRedRole = red.filter(function (team) {
+        return this.role == "spymaster"
+      })
+  
+      if (Math.floor(Math.random() * 2) === 0 && checkRedRole.length === 0) {
+        console.log(red)
+        console.log(blue)
+        return 'spymaster'
+  
+      }
+      else {
+        console.log(red)
+        console.log(blue)
+        return 'guesser'
+      }
+    } else {
+  
+      blue.push(player)
+  
+      var checkBlueRole = blue.filter(function (team) {
+        return this.role == 'spymaster'
+      })
+  
+      if (Math.floor(Math.random() * 2) === 0 && checkBlueRole.length === 0) {
+        console.log(red)
+        console.log(blue)
+        return 'spymaster'
+      }
+      else {
+        console.log(red)
+        console.log(blue)
+        return 'guesser'
+      }
+    }
+  
+  }
 }
 
 var createGame = function () {
@@ -39,6 +76,7 @@ var createGame = function () {
   })
 }
 
+
 $('#player-start').on('click', function () {
   var name = $('#name').val();
   if (!name) {
@@ -47,20 +85,8 @@ $('#player-start').on('click', function () {
   }
   socket.emit('createGame', { name })
   player = new Player(socket.id, name)
-
-  if (Math.floor(Math.random() * 2) === 0) {
-    role = 'spymaster'
-    spymasters.push(player)
-
-  }
-  else {
-    role = 'guesser'
-    guessers.push(player)
-  }
   players.push(player)
-  console.log(spymasters)
-  console.log(guessers)
-
+  console.log(players)
 })
 
 socket.on('newGame', function (data) {
@@ -75,17 +101,25 @@ socket.on('newGame', function (data) {
 $("#player-join").on('click', function () {
   console.log('clicked')
   $("#join").css('display', 'inline')
-  var name = $('#name').val();
-  if (!name) {
-    $('#user-message').text('Please enter your name!')
+
+})
+
+$("#join-game").on('click', function () {
+  name = $('#name').val();
+  roomId = $('#game-id').val();
+  if (!name || !roomId) {
+    $('#user-message').text('Please enter your name and roomID to continue.')
     return;
   }
 
   if (players.length < 3) {
-    socket.emit('joinGame', { name, room: roomID });
+    console.log('length is less than three')
+    socket.emit('joinGame', { name, room: roomId });
+    $('#user-message').text('Waiting for other players to join... ')
     player = new Player(socket.id, name);
   } else if (players.length = 3) {
-    socket.emit('joinGame', { name, rooom: roomID });
+    socket.emit('joinGame', { name, rooom: roomId });
+    createGame();
     socket.emit('startGame', { players });
   }
   else {
@@ -103,7 +137,7 @@ socket.on('newGame', function (data) {
   $("#user-message").text(message);
 
   // Create game for player 1
-  game = new Game(data.room);
+  // game = new Game(data.room);
 
 });
 
@@ -136,8 +170,5 @@ $("#player-join").on('click', function () {
     //     $(wordDisplay).append(this);
     //     console.log(this);
     // })
-
-
-
 
 
