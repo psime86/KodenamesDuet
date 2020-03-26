@@ -166,6 +166,7 @@
     }
     $('#phase-1').css('display', 'none')
     $('#phase-2').css('display', 'inline');
+    $("#exampleModalScrollable").modal("show");
     
   })
 
