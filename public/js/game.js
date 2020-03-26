@@ -1,7 +1,7 @@
 (function init() {
-  var socket = io.connect('http://kodenames-duet-007.herokuapp.com')
+  // var socket = io.connect('http://kodenames-duet-007.herokuapp.com')
 
-  // var socket = io.connect('http://localhost:3000')
+  var socket = io.connect('http://localhost:3000')
 
   var players = []
   var words = []
@@ -101,7 +101,7 @@
     assignTeam();
     player = new Player(socket.id, name),
       players.push(player),
-    socket.emit('createGame', { players })
+      socket.emit('createGame', { players })
   })
 
   socket.on('newGame', function (data) {
@@ -137,15 +137,15 @@
       }
     }).then(function () {
       var parent = $("#Test");
-    var divs = parent.children();
-    while (divs.length) {
-      parent.append(divs.splice(Math.floor(Math.random() * divs.length), 1)[0]);
-    };
-    var cards = $(".back");
-    for (i=0; i < cards.length; i++) {
-      var color = $(cards[i]).data('color')
-      pattern.push(color)
-    }
+      var divs = parent.children();
+      while (divs.length) {
+        parent.append(divs.splice(Math.floor(Math.random() * divs.length), 1)[0]);
+      };
+      var cards = $(".back");
+      for (i = 0; i < cards.length; i++) {
+        var color = $(cards[i]).data('color')
+        pattern.push(color)
+      }
 
 
 
@@ -168,8 +168,8 @@
       $(cards[i]).html(data.words[i]);
     }
     var back = $('.back img')
-    for (var i =0; i < data.pattern.length; i++) {
-    
+    for (var i = 0; i < data.pattern.length; i++) {
+
       if (data.pattern[i] == "blue") {
         color = "images/blue-spy.jpg"
       } else if (data.pattern[i] == 'red') {
@@ -177,7 +177,7 @@
       } else if (data.pattern[i] == 'black') {
         color = "images/black-spy.jpeg"
       } else {
-        color = "images/bystander.jpg" 
+        color = "images/bystander.jpg"
       }
 
       $(back[i]).attr('src', color)
@@ -186,7 +186,18 @@
     $('#phase-1').css('display', 'none')
     $('#phase-2').css('display', 'inline');
     $("#exampleModalScrollable").modal("show");
-    
+  })
+
+  $(document).on('click', 'div.game-board', function (event) {
+    console.log('clicked')
+    var flipped = event.target
+    console.log(event.target)
+    console.log(flipped)
+    socket.emit('clickEvent', { flipped });
+  })
+
+  socket.on('clickEvent', function (data) {
+    $(data.id).trigger('click')
   })
 
   //   $("#exampleModalScrollable").modal("show");
