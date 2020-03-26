@@ -1,7 +1,7 @@
 (function init() {
-  // var socket = io.connect('http://name-of-heroku-app.herokuapp.com'),
+  var socket = io.connect('http://kodenames-duet-007.herokuapp.com'),
 
-  var socket = io.connect('http://localhost:3000')
+  // var socket = io.connect('http://localhost:3000')
 
   // var red = []
   // var blue = []
@@ -147,6 +147,17 @@
       }
     }).then(function () {
       console.log(words)
+      var parent = $("#Test");
+    var divs = parent.children();
+    while (divs.length) {
+      parent.append(divs.splice(Math.floor(Math.random() * divs.length), 1)[0]);
+    };
+    var cards = $(".back");
+
+
+
+
+
       socket.emit('joinGame', { name, room: roomId, words });
       // } else if (players.length = 3) {
       //   // socket.emit('joinGame', { name, rooom: roomId });
