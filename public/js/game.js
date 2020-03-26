@@ -174,7 +174,7 @@
       parent.append(divs.splice(Math.floor(Math.random() * divs.length), 1)[0]);
     };
     console.log(words.words)
-    var cards = $(".card-title");
+    var cards = $(".clue");
     for (var i = 0; i < words.words.length; i++) {
 
       $(cards[i]).html(words.words[i]);
