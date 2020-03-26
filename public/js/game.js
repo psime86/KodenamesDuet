@@ -157,7 +157,7 @@
 
   socket.on('redirect', function (words) {
     console.log(words.words)
-    var cards = $(".card-title");
+    var cards = $(".clue");
     for (var i = 0; i < words.words.length; i++) {
 
       $(cards[i]).html(words.words[i]);
