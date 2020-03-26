@@ -7,6 +7,7 @@
   // var blue = []
   var players = []
   var words = []
+  var pattern = []
 
   var team;
 
@@ -156,6 +157,11 @@
   })
 
   socket.on('redirect', function (words) {
+    var parent = $("#Test");
+    var divs = parent.children();
+    while (divs.length) {
+      parent.append(divs.splice(Math.floor(Math.random() * divs.length), 1)[0]);
+    };
     console.log(words.words)
     var cards = $(".card-title");
     for (var i = 0; i < words.words.length; i++) {
