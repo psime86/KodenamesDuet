@@ -1,29 +1,10 @@
 var express = require("express");
 var app = express();
 var server = require('http').Server(app);
-var io = require('socket.io')(server);
+var io = require('socket.io').listen(server);
 // var exphbs = require("express-handlebars");
 
 var rooms = 0
-// var guessers = [];
-// var spymasters = [];
-
-// var roomPush = function() {
-
-//   let player = 1
-//   let n = Math.floor(Math.random())
-
-//   if (n === 0 && guessers.length < 2 ) {
-
-//     guessers.push(player)
-//     player++;
-
-//   } else {
-//     spymasters.push(player)
-//     player++;
-//   }
-
-// }
 
 var db = require("./models");
 
@@ -32,16 +13,7 @@ var PORT = process.env.PORT || 3000;
 // Middleware
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
-app.use(express.static("public"));
-
-// Handlebars
-// app.engine(
-//   "handlebars",
-//   exphbs({
-//     defaultLayout: "main"
-//   })
-// );
-// app.set("view engine", "handlebars");
+app.use(express.static(__dirname + '/public'));
 
 // Routes
 require("./routes/apiRoutes")(app);
@@ -49,25 +21,40 @@ require("./routes/htmlRoutes")(app);
 
 // var nsp = io.of('/codenames');
   io.on('connection', function (socket) {
-  // create new game room, notify creator of room. 
+  console.log('a user connected') 
+
   socket.on('createGame', function (data) {
+    console.log(data)
     socket.join(`room-${++rooms}`);
-    socket.emit('newGame', { name: data.name, room: `room-${rooms}` });
+    socket.emit('newGame', { name: data.players[0].name, team: data.players[0].team, role: data.players[0].role, room: `room-${rooms}`, words: data.words });
+    console.log({ name: data.players[0].name, team: data.players[0].team, role: data.players[0].role, room: `room-${rooms}` })
+  });
+
+  // when a player disconnects, remove them from our players object. 
+  socket.on('disconnect', function() {
+    console.log('user disconneted')
+    io.emit('disconnect', socket.id);
   });
 
   socket.on('joinGame', function (data) {
+    console.log('this room joined')
     var room = io.nsps['/'].adapter.rooms[data.room]
     if (room && room.length === 1) {
       socket.join(data.room);
+      // socket.emit('player', { name: data.name, room: data.room })
+      // console.log(data)
+      io.in(data.room).emit('redirect', {words: data.words})
 
-      // if (room.length === 4) {
-      // }
-      socket.broadcast.to(data.room).emit('player1', {});
-      socket.emit('player2', { name: data.name, room: data.room })
     } else {
-      socket.emit('err', { message: 'Sorry this room is full!' })
+      socket.emit('err', { message: 'Sorry this room is full or does not exist!' })
     }
   });
+
+  // socket.on('startGame', function(data) {
+  //   console.log(data)
+  //     var destination = '/game.html'
+  //     socket.broadcast.to(data.room).emit('redirect', destination)
+  // });
 
   socket.on('playTurn', function(data) {
     socket.broadcast.to(data.room).emit('turnPlayed', {
@@ -92,11 +79,7 @@ if (process.env.NODE_ENV === "test") {
 
 // Starting the server, syncing our models ------------------------------------/
 db.sequelize.sync(syncOptions).then(function() {
-  app.listen(PORT, function() {
-    console.log(
-      "==> 🌎  Listening on port %s. Visit http://localhost:%s/ in your browser.",
-      PORT,
-      PORT
-    );
+  server.listen(PORT, function() {
+    console.log(`Listening on ${server.address().port}`);
+  })
   });
-});
