@@ -25,7 +25,7 @@ module.exports = function(app) {
 
   // Render 404 page for any unmatched routes
   app.get("*", function(req, res) {
-    res.send("404");
+    res.json("404 error, page not found");
   });
 
   app.get('/game', function(req, res) {
