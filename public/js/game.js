@@ -1,24 +1,3 @@
-
-$(document).ready(function() {
-
-  var cards = $(".card-title");
-
-  console.log(cards);
-
-
-  $.get("/api/words", function(data) {
-      for (var i = 0; i < data.length; i++) {
-         
-          $(cards[i]).html(data[i].word);
-      
-          
-      }
-      console.log(data);
-
-
-  });
-
-
 (function init() {
   // var socket = io.connect('http://name-of-heroku-app.herokuapp.com'),
 
@@ -27,6 +6,7 @@ $(document).ready(function() {
   // var red = []
   // var blue = []
   var players = []
+  var words = []
 
   var team;
 
@@ -113,17 +93,6 @@ $(document).ready(function() {
   //   }
   // }
 
-  createGame = function () {
-
-    var cards = $(".card-title");
-    $.get("/api/words", function (data) {
-      for (var i = 0; i < data.length; i++) {
-
-        $(cards[i]).html(data[i].word);
-      }
-    })
-  }
-
   $('#player-start').on('click', function () {
     var name = $('#name').val();
     if (!name) {
@@ -155,7 +124,7 @@ $(document).ready(function() {
 
   $("#player-join").on('click', function () {
     console.log('clicked')
-    $("#join").css('display', 'inline')
+    $("#join, #game-id").css('display', 'inline')
   })
 
   $("#join-game").on('click', function (data) {
@@ -170,79 +139,64 @@ $(document).ready(function() {
     player = new Player(socket.id, name);
     players.push(player)
     console.log(players)
-    socket.emit('joinGame', { name, room: roomId });
-    // } else if (players.length = 3) {
-    //   // socket.emit('joinGame', { name, rooom: roomId });
-    //   // createGame();
-    //   // socket.emit('startGame', { players });
-  });
-
-  socket.on('redirect', function (destination) {
-    $("#exampleModalScrollable").modal("show");
-    var cards = $(".card-title");
-    console.log(cards);
     $.get("/api/words", function (data) {
-      for (var i = 0; i < data.length; i++) {
-
-        $(cards[i]).html(data[i].word);
-
-
+      for (i = 0; i < data.length; i++) {
+        console.log(data[i].word)
+        words.push(data[i].word)
       }
-      console.log(data);
+    }).then(function () {
+      console.log(words)
+      socket.emit('joinGame', { name, room: roomId, words });
+      // } else if (players.length = 3) {
+      //   // socket.emit('joinGame', { name, rooom: roomId });
+      //   // createGame();
+      //   // socket.emit('startGame', { players });
+    })
 
+  })
 
-    });
-
-    console.log('received redirect')
-    window.location.href = destination
-
-    $("#exampleModalScrollable").modal("show");
+  socket.on('redirect', function (words) {
+    console.log(words.words)
     var cards = $(".card-title");
-    console.log(cards);
-    $.get("/api/words", function (data) {
-      for (var i = 0; i < data.length; i++) {
+    for (var i = 0; i < words.words.length; i++) {
 
-        $(cards[i]).html(data[i].word);
+      $(cards[i]).html(words.words[i]);
+
+    console.log(words)
+    }
+    $('#phase-1').css('display', 'none')
+    $('#phase-2').css('display', 'inline');
+    
+  })
+
+  //   $("#exampleModalScrollable").modal("show");
+  //   var cards = $(".card-title");
+  //   console.log(cards);
+  //   $.get("/api/words", function (data) {
+  //     for (var i = 0; i < data.length; i++) {
+
+  //       $(cards[i]).html(data[i].word);
 
 
-      }
-      console.log(data);
+  //     }
+  //     console.log(data);
 
 
-    });
+  //   });
 
-  });
+  // });
 
 
-// New Game created by current client. Update the UI and create new Game var.
-socket.on('newGame', function (data) {
-  console.log('new game created');
-  var message =
-    `Hello, ${data.name}. Please ask your friend to enter Game ID: 
-        ${data.room}. Waiting for other player...`;
+  socket.on('err', function (data) {
+    $("#user-message").text(data.message);
+  })
 
-  $("#user-message").text(message);
+  // socket.on('disconnect', function(data) {
+  //   var message = `Hello. One of your friends has left the game. Please have a player log in using game ID: 
+  //   ${data.room}`
 
-  // Create game for player 1
-  // game = new Game(data.room);
-
-});
-
-socket.on('joinGame', function (data) {
-
-})
-
-// socket.on('disconnect', function(data) {
-//   var message = `Hello. One of your friends has left the game. Please have a player log in using game ID: 
-//   ${data.room}`
-
-//   $('somewhere').text(message)
-// })
-
-$("#player-join").on('click', function () {
-  console.log('clicked')
-  $("#game-id").css('display', 'inline')
-});
+  //   $('somewhere').text(message)
+  // })
 
 
   // console.log(wordArray);
@@ -259,7 +213,4 @@ $("#player-join").on('click', function () {
   // })
 
 }())
-
-})
-
 

@@ -26,7 +26,7 @@ require("./routes/htmlRoutes")(app);
   socket.on('createGame', function (data) {
     console.log(data)
     socket.join(`room-${++rooms}`);
-    socket.emit('newGame', { name: data.players[0].name, team: data.players[0].team, role: data.players[0].role, room: `room-${rooms}` });
+    socket.emit('newGame', { name: data.players[0].name, team: data.players[0].team, role: data.players[0].role, room: `room-${rooms}`, words: data.words });
     console.log({ name: data.players[0].name, team: data.players[0].team, role: data.players[0].role, room: `room-${rooms}` })
   });
 
@@ -43,11 +43,10 @@ require("./routes/htmlRoutes")(app);
       socket.join(data.room);
       // socket.emit('player', { name: data.name, room: data.room })
       // console.log(data)
-      var destination = '/codenames'
-      io.in(data.room).emit('redirect', destination)
+      io.in(data.room).emit('redirect', {words: data.words})
 
     } else {
-      socket.emit('err', { message: 'Sorry this room is full!' })
+      socket.emit('err', { message: 'Sorry this room is full or does not exist!' })
     }
   });
 
