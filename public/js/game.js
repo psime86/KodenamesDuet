@@ -188,12 +188,12 @@
     $("#exampleModalScrollable").modal("show");
   })
 
-  $(document).on('click', 'div.game-board', function (event) {
-    console.log('clicked')
-    var flipped = event.target
-    console.log(event.target)
-    console.log(flipped)
-    socket.emit('clickEvent', { flipped });
+  $(document).on('click', 'div.game-board', function () {
+
+    console.log($(this).html())
+
+   
+    socket.emit('clickEvent')
   })
 
   socket.on('clickEvent', function (data) {
