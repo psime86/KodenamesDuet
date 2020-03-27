@@ -3,13 +3,13 @@
 
   var socket = io.connect('http://localhost:3000')
 
-  var players = []
-  var words = []
-  var pattern = []
-  var divPattern = []
+  var players = [];
+  var words = [];
+  var pattern = [];
+  var divPattern = [];
 
   var team;
-
+  
   assignTeam = function () {
     if (Math.floor(Math.random() * 2)) {
       team = 'red'
@@ -250,7 +250,7 @@
   //     console.log(this);
   // })
 
-
+ 
 }())
 
 

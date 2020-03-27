@@ -96,10 +96,12 @@
                               </select>
                         </div>
                         <button type="submit" class="btn btn-danger mb-2" id="clue-submit">Submit Clue</button>
+                        
                     </form>
+                    <!--GUESSER CLUE AREA-->
+                    <div class="inline text-center"><div id="clue-div"></div><button type="end-turn" id="end-turn" class="btn btn-danger m-2">End Turn</button>    
                 </div>
-                <!--GUESSER CLUE AREA-->
-                <div id="clue-div"></div>
+                
             </div>
             
             <div id="FirstTeam" style="text-align: center;"></div>
@@ -231,7 +233,7 @@
 
                             <div class="col-2 mr-3" id="color">
                                 <div class="GameBoard">
-                                    <div class="card game-card m-3" id="card-10" style="width: 150px; height: 100px;">
+                                    <div class="card game-card m-3 redCard" id="card-10" style="width: 150px; height: 100px;">
                                         <div class="card-body front px-0" style="background-color: white;">
                                             <h5 class="card-title text-center clue"></h5>
                                         </div>
@@ -244,7 +246,7 @@
 
                             <div class="col-2 mr-3" id="color">
                                 <div class="GameBoard">
-                                    <div class="card game-card m-3" id="card-11" style="width: 150px; height: 100px;">
+                                    <div class="card game-card m-3 redCard" id="card-11" style="width: 150px; height: 100px;">
                                         <div class="card-body front px-0" style="background-color: white;">
                                             <h5 class="card-title text-center clue"></h5>
                                         </div>
@@ -257,7 +259,7 @@
 
                             <div class="col-2 mr-3" id="color">
                                 <div class="GameBoard">
-                                    <div class="card game-card m-3" id="card-12" style="width: 150px; height: 100px;">
+                                    <div class="card game-card m-3 redCard" id="card-12" style="width: 150px; height: 100px;">
                                         <div class="card-body front px-0" style="background-color: white;">
                                             <h5 class="card-title text-center clue"></h5>
                                         </div>
@@ -270,7 +272,7 @@
 
                             <div class="col-2 mr-3" id="color">
                                 <div class="GameBoard">
-                                    <div class="card game-card m-3" id="card-13" style="width: 150px; height: 100px;">
+                                    <div class="card game-card m-3 redCard" id="card-13" style="width: 150px; height: 100px;">
                                         <div class="card-body front px-0" style="background-color: white;">
                                             <h5 class="card-title text-center clue"></h5>
                                         </div>
@@ -283,7 +285,7 @@
 
                             <div class="col-2 mr-3" id="color">
                                 <div class="GameBoard">
-                                    <div class="card game-card m-3" id="card-14" style="width: 150px; height: 100px;">
+                                    <div class="card game-card m-3 redCard" id="card-14" style="width: 150px; height: 100px;">
                                         <div class="card-body front px-0" style="background-color: white;">
                                             <h5 class="card-title text-center clue"></h5>
                                         </div>
@@ -296,7 +298,7 @@
 
                             <div class="col-2 mr-3" id="color">
                                 <div class="GameBoard">
-                                    <div class="card game-card m-3" id="card-15" style="width: 150px; height: 100px;">
+                                    <div class="card game-card m-3 redCard" id="card-15" style="width: 150px; height: 100px;">
                                         <div class="card-body front px-0" style="background-color: white;">
                                             <h5 class="card-title text-center clue"></h5>
                                         </div>
@@ -313,7 +315,7 @@
 
                             <div class="col-2 mr-3" id="color">
                                 <div class="GameBoard">
-                                    <div class="card game-card m-3" id="card-16" style="width: 150px; height: 100px;">
+                                    <div class="card game-card m-3 redCard" id="card-16" style="width: 150px; height: 100px;">
                                         <div class="card-body front px-0" style="background-color: white;">
                                             <h5 class="card-title text-center clue"></h5>
                                         </div>
@@ -326,7 +328,7 @@
 
                             <div class="col-2 mr-3" id="color">
                                 <div class="GameBoard">
-                                    <div class="card game-card m-3" id="card-17" style="width: 150px; height: 100px;">
+                                    <div class="card game-card m-3 redCard" id="card-17" style="width: 150px; height: 100px;">
                                         <div class="card-body front px-0" style="background-color: white;">
                                             <h5 class="card-title text-center clue"></h5>
                                         </div>
@@ -518,7 +520,15 @@
         $(".game-card").flip();
         
         
-        
+
+        function reset() {
+            $("#end-turn").hide();
+            $("#clue-div").hide();
+            $("#clue-word").val("");
+            $("#clue-number").val("0");
+        };
+
+        reset();
         var flip = $(".game-card").data("flip-model");
         for (i=0; i < $(".game-card").length; i++) {
             var isFlipped = false;
@@ -529,15 +539,16 @@
                $(this).off(".flip");
                isFlipped = true;
                console.log(isFlipped);
-           })
+           });
             
             
             
-        })
-    
-
+        });
+        
+        
         $("#clue-submit").on("click", function(event) {
             event.preventDefault();
+            $("#clue-div").show();
             var clueWord = $("#clue-word").val().trim();
             var clueNumber = $("#clue-number").val().trim();
             
@@ -546,11 +557,29 @@
             }
             else {
                $("#clue-div").text("CLUE: " + clueWord + " || " + "NUMBER OF CARDS: " + clueNumber); 
+               $("#end-turn").show();
+               
             }
 
 
             
-        })
+        });
+    
+        var cards = $(".redCard");
+        console.log(cards);
+
+
+
+        $("#end-turn").click(function(event) {
+            var computerCard = cards[Math.floor(Math.random() * cards.length)];
+            console.log(computerCard);
+            //alert( "Handler for .click() called." );
+            event.preventDefault();
+            $(computerCard).flip(true);
+            reset();
+            
+        });
+
 
 
 
