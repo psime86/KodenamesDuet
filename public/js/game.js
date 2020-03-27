@@ -1,11 +1,12 @@
 (function init() {
-  var socket = io.connect('http://kodenames-duet-007.herokuapp.com')
+  // var socket = io.connect('http://kodenames-duet-007.herokuapp.com')
 
-  // var socket = io.connect('http://localhost:3000')
+  var socket = io.connect('http://localhost:3000')
 
   var players = []
   var words = []
   var pattern = []
+  var divPattern = []
 
   var team;
 
@@ -101,7 +102,7 @@
     assignTeam();
     player = new Player(socket.id, name),
       players.push(player),
-    socket.emit('createGame', { players })
+      socket.emit('createGame', { players })
   })
 
   socket.on('newGame', function (data) {
@@ -137,21 +138,20 @@
       }
     }).then(function () {
       var parent = $("#Test");
-    var divs = parent.children();
-    while (divs.length) {
-      parent.append(divs.splice(Math.floor(Math.random() * divs.length), 1)[0]);
-    };
-    var cards = $(".back");
-    for (i=0; i < cards.length; i++) {
-      var color = $(cards[i]).data('color')
-      pattern.push(color)
-    }
-
-
-
-
-
-      socket.emit('joinGame', { name, room: roomId, words, pattern });
+      var divs = parent.children();
+      while (divs.length) {
+        parent.append(divs.splice(Math.floor(Math.random() * divs.length), 1)[0]);
+      };
+      var cards = $(".back");
+      var cardId = $(".card");
+     
+      for (i = 0; i < cards.length; i++) {
+        var color = $(cards[i]).data('color')
+        var divId = $(cardId[i]).attr('id')
+        pattern.push(color)
+        divPattern.push(divId)
+      }
+      socket.emit('joinGame', { name, room: roomId, words, pattern, divPattern });
       // } else if (players.length = 3) {
       //   // socket.emit('joinGame', { name, rooom: roomId });
       //   // createGame();
@@ -163,13 +163,16 @@
   socket.on('redirect', function (data) {
     console.log(data.pattern)
     console.log(data.words)
-    var cards = $(".clue");
+    var cards = $(".clue")
+    var cardDiv = $(".card")
     for (var i = 0; i < data.words.length; i++) {
       $(cards[i]).html(data.words[i]);
+      $(cardDiv[i]).attr("id", data.divPattern[i])
+
     }
     var back = $('.back img')
-    for (var i =0; i < data.pattern.length; i++) {
-    
+    for (var i = 0; i < data.pattern.length; i++) {
+
       if (data.pattern[i] == "blue") {
         color = "images/blue-spy.jpg"
       } else if (data.pattern[i] == 'red') {
@@ -177,7 +180,7 @@
       } else if (data.pattern[i] == 'black') {
         color = "images/black-spy.jpeg"
       } else {
-        color = "images/bystander.jpg" 
+        color = "images/bystander.jpg"
       }
 
       $(back[i]).attr('src', color)
@@ -186,7 +189,22 @@
     $('#phase-1').css('display', 'none')
     $('#phase-2').css('display', 'inline');
     $("#exampleModalScrollable").modal("show");
+  })
+
+  $('.card').on('click', function () {
+
+     var cardFlipped = $(this).attr('id');
+
+    socket.emit('clickEvent', {cardFlipped})
+  })
+
+  socket.on('cardFlip', function (data) {
+    console.log(data)
+    cardToFlip = $('#' + data.cardFlipped)
+    console.log(cardToFlip)
     
+    cardToFlip.flip(true);
+
   })
 
   //   $("#exampleModalScrollable").modal("show");

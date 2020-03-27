@@ -43,12 +43,18 @@ require("./routes/htmlRoutes")(app);
       socket.join(data.room);
       // socket.emit('player', { name: data.name, room: data.room })
       // console.log(data)
-      io.in(data.room).emit('redirect', {words: data.words, pattern: data.pattern})
+      io.in(data.room).emit('redirect', {words: data.words, pattern: data.pattern, divPattern: data.divPattern})
 
     } else {
       socket.emit('err', { message: 'Sorry this room is full or does not exist!' })
     }
   });
+
+  socket.on('clickEvent', function (data) {
+    console.log('event received')
+    console.log(data)
+    socket.broadcast.emit('cardFlip', {cardFlipped: data.cardFlipped})
+  })
 
   // socket.on('startGame', function(data) {
   //   console.log(data)
