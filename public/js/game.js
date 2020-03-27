@@ -1,22 +1,19 @@
 (function init() {
-  var socket = io.connect('http://kodenames-duet-007.herokuapp.com')
+  // var socket = io.connect('http://kodenames-duet-007.herokuapp.com')
 
-  // var socket = io.connect('http://localhost:3000')
+  var socket = io.connect('http://localhost:3000')
 
+  var turns = 8
+  var isPlaying = false;
   var players = []
   var words = []
   var pattern = []
   var divPattern = []
   var room;
-  var team;
+  var role1
+  var role2
 
-  assignTeam = function () {
-    if (Math.floor(Math.random() * 2)) {
-      team = 'red'
-    } else {
-      team = 'blue'
-    }
-  }
+  var team = 'blue'
 
   assignRole = function () {
 
@@ -39,82 +36,34 @@
     this.role = assignRole();
   }
 
-  //   var checkTeam = players.filter(function (team) {
-  //     return this.team == "red"
-  //   })
-  //   if (Math.floor(Math.random() * 2) === 0 && checkTeam.length <= 1) {
-  //     return "red"
-
-  //   } else {
-  //     return "blue"
-  //   }
-  // }
-  //   this.role = function () {
-
-  //     if (this.team === 'red') {
-
-  //       red.push(player)
-
-  //       var checkRedRole = red.filter(function (team) {
-  //         return this.role == "spymaster"
-  //       })
-
-  //       if (Math.floor(Math.random() * 2) === 0 && checkRedRole.length === 0) {
-  //         console.log(red)
-  //         console.log(blue)
-  //         return 'spymaster'
-
-  //       }
-  //       else {
-  //         console.log(red)
-  //         console.log(blue)
-  //         return 'guesser'
-  //       }
-  //     } else {
-
-  //       blue.push(player)
-
-  //       var checkBlueRole = blue.filter(function (team) {
-  //         return this.role == 'spymaster'
-  //       })
-
-  //       if (Math.floor(Math.random() * 2) === 0 && checkBlueRole.length === 0) {
-  //         console.log(red)
-  //         console.log(blue)
-  //         return 'spymaster'
-  //       }
-  //       else {
-  //         console.log(red)
-  //         console.log(blue)
-  //         return 'guesser'
-  //       }
-  //     }
-
-  //   }
-  // }
-
   $('#player-start').on('click', function () {
     var name = $('#name').val();
     if (!name) {
       $('#user-message').text('Please enter your name!')
       return;
     }
-    assignTeam();
+    
     player = new Player(socket.id, name),
       players.push(player),
+      role1 = player.role
       socket.emit('createGame', { players })
   })
 
   socket.on('newGame', function (data) {
 
+    room = data.room
+
     var message = `Hello, ${data.name}. Your team is ${data.team}. Please ask your friend to enter Game ID: 
-      ${data.room}. Waiting for players to join...`;
+      ${data.room}. Waiting for player to join...`;
 
     $('#user-message').text(message)
 
-    team = data.team
-
-    return team
+    if (role1 == 'guesser') {
+      $('#spymaster').css('display', 'none')
+    } else {
+      $('#guesser').css('display', 'none')
+    }
+    console.log(role1)
 
   })
 
@@ -132,6 +81,8 @@
     }
     player = new Player(socket.id, name);
     players.push(player)
+    role2 = player.role
+
     $.get("/api/words", function (data) {
       for (i = 0; i < data.length; i++) {
         words.push(data[i].word)
@@ -151,13 +102,20 @@
         pattern.push(color)
         divPattern.push(divId)
       }
-      socket.emit('joinGame', { name, room: roomId, words, pattern, divPattern });
-      // } else if (players.length = 3) {
-      //   // socket.emit('joinGame', { name, rooom: roomId });
-      //   // createGame();
-      //   // socket.emit('startGame', { players });
+      socket.emit('joinGame', { name, players, room: roomId, words, pattern, divPattern });
+
     })
 
+  })
+
+  socket.on('setupFunction', function(data) {
+    console.log('setupFunctionReceived')
+    console.log(role2)
+    if (role2 == 'guesser') {
+      $('#spymaster').css('display', 'none')
+    } else {
+      $('#guesser').css('display', 'none')
+    }
   })
 
   socket.on('redirect', function (data) {
@@ -191,7 +149,16 @@
     $('#phase-1').css('display', 'none')
     $('#phase-2').css('display', 'inline');
     $("#exampleModalScrollable").modal("show");
-    return data
+
+  //   var playerArray = data.players 
+
+  //   if (playerArray[0].role === 'spymaster') {
+  //     $()
+  //   }
+
+
+
+  //   return data
   })
 
   $('.game-card').on('click', function (data) {
@@ -210,6 +177,75 @@
     cardToFlip.flip(true);
 
   })
+
+
+  function reset() {
+    $("#spymaster").hide()
+    $("#guesser").hide()
+    $("#end-turn").hide();
+    $("#clue-div").hide();
+    $("#clue-word").val("");
+    $("#clue-number").val("0");
+};
+
+reset();
+var flip = $(".game-card").data("flip-model");
+for (i=0; i < $(".game-card").length; i++) {
+    var isFlipped = false;
+}
+$(".game-card").on("click", function() {
+    
+   $(".game-card").on("flip:done", function() {
+       $(this).off(".flip");
+       isFlipped = true;
+       console.log(isFlipped);
+   });
+    
+    
+    
+});
+
+
+$("#clue-submit").on("click", function(event) {
+    event.preventDefault();
+    $("#clue-div").show();
+    var clueWord = $("#clue-word").val().trim();
+    var clueNumber = $("#clue-number").val().trim();
+    
+    if (clueWord === "") {
+        $("#clue-div").text("PLEASE ENTER A VALID CLUE");
+    }
+    else {
+       $("#clue-div").text("CLUE: " + clueWord + " || " + "NUMBER OF CARDS: " + clueNumber); 
+       $("#end-turn").show();
+
+       socket.emit('clueSubmit', {clueWord, clueNumber, room})
+       
+    }
+    
+});
+
+socket.on('clueReceive', function(data) {
+  console.log('clueReceive happened')
+  $("#clue-div").show();
+  $("#clue-div").text("CLUE: " + data.clueWord + " || " + "NUMBER OF CARDS: " + data.clueNumber); 
+       $("#end-turn").show();
+})
+
+var cards = $(".redCard");
+console.log(cards);
+
+
+
+$("#end-turn").click(function(event) {
+    var computerCard = cards[Math.floor(Math.random() * cards.length)];
+    console.log(computerCard);
+    //alert( "Handler for .click() called." );
+    event.preventDefault();
+    $(computerCard).flip(true);
+    reset();
+    
+});
 
   //   $("#exampleModalScrollable").modal("show");
   //   var cards = $(".card-title");
@@ -254,5 +290,8 @@
   //     console.log(this);
   // })
 
+ 
 }())
+
+
 
