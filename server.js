@@ -50,6 +50,12 @@ require("./routes/htmlRoutes")(app);
     }
   });
 
+  socket.on('clickEvent', function (data) {
+    console.log('event received')
+    console.log(data)
+    socket.broadcast.emit('cardFlip', {cardFlipped: data.cardFlipped})
+  })
+
   // socket.on('startGame', function(data) {
   //   console.log(data)
   //     var destination = '/game.html'
