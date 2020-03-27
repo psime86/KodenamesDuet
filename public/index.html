@@ -510,19 +510,18 @@
     <script>
         $(".m-3").flip();
         
-        var flip = $(".m-3").data("flip-model");
-        console.log($(".m-3"));
-        cardArray = $(".m-3");
         
-        for ( i = 0; i < cardArray.length; i++) {
-            $(cardArray[i]).on("click", function() {
-            console.log(cardArray[i]);
+        var cardId = $(this).attr("id");
+        var flip = $(flip).data("flip-model");
+        $(cardId).on("click", function() {
             console.log(flip.isFlipped);
-            $(cardArray[i]).off(".flip");
+            console.log(cardId);
+            
             
         })
-        }
+    
         
+
 
 
         
