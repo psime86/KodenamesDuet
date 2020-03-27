@@ -1,7 +1,7 @@
 (function init() {
-  // var socket = io.connect('http://kodenames-duet-007.herokuapp.com')
+  var socket = io.connect('http://kodenames-duet-007.herokuapp.com')
 
-  var socket = io.connect('http://localhost:3000')
+  // var socket = io.connect('http://localhost:3000')
 
   var players = []
   var words = []
