@@ -6,6 +6,7 @@
   var players = []
   var words = []
   var pattern = []
+  var divPattern = []
 
   var team;
 
@@ -142,16 +143,15 @@
         parent.append(divs.splice(Math.floor(Math.random() * divs.length), 1)[0]);
       };
       var cards = $(".back");
+      var cardId = $(".card");
+     
       for (i = 0; i < cards.length; i++) {
         var color = $(cards[i]).data('color')
+        var divId = $(cardId[i]).attr('id')
         pattern.push(color)
+        divPattern.push(divId)
       }
-
-
-
-
-
-      socket.emit('joinGame', { name, room: roomId, words, pattern });
+      socket.emit('joinGame', { name, room: roomId, words, pattern, divPattern });
       // } else if (players.length = 3) {
       //   // socket.emit('joinGame', { name, rooom: roomId });
       //   // createGame();
@@ -163,9 +163,12 @@
   socket.on('redirect', function (data) {
     console.log(data.pattern)
     console.log(data.words)
-    var cards = $(".clue");
+    var cards = $(".clue")
+    var cardDiv = $(".card")
     for (var i = 0; i < data.words.length; i++) {
       $(cards[i]).html(data.words[i]);
+      $(cardDiv[i]).attr("id", data.divPattern[i])
+
     }
     var back = $('.back img')
     for (var i = 0; i < data.pattern.length; i++) {
