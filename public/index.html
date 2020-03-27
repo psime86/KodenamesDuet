@@ -38,7 +38,7 @@
                     </div>
     
                     <div class='col-10-offset-1 form-inline' style='display:none' id='join'>
-                        <input style='display:none;' class="form-control m-3" id='game-id' type="text" placeholder="enter game ID here">
+                        <input style='display:none;' class="form-control m-2" id='game-id' type="text" placeholder="enter game ID here">
                         <input class="btn btn-danger" id="join-game" type="submit" value="Enter">
                     </div>
                     
@@ -507,13 +507,25 @@
         crossorigin="anonymous"></script>
     <script src="https://cdn.rawgit.com/nnattawat/flip/master/dist/jquery.flip.min.js"></script>
     <script>
-        $(".card").flip();
+        $(".m-3").flip();
+        
+        var flip = $(".m-3").data("flip-model");
+        console.log($(".m-3"));
+        cardArray = $(".m-3");
+        
+        for ( i = 0; i < cardArray.length; i++) {
+            $(cardArray[i]).on("click", function() {
+            console.log(cardArray[i]);
+            console.log(flip.isFlipped);
+            $(cardArray[i]).off(".flip");
+            
+        })
+        }
+        
 
-        // var flip = $(".card").data("flip-model");
-        // console.log(flip);
-        // if (flip.isFlipped) {
-        //     $(".card").off(".flip");
-        // }
+
+        
+        
     </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.dev.js"></script>
     <script src="node_modules/jquery/dist/jquery.min.js"></script>
