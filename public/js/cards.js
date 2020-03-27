@@ -1,12 +1,12 @@
-$(document).ready(function (){
-
-  $(function () {
-    var parent = $("#Test");
-    var divs = parent.children();
-    while (divs.length){
-      parent.append(divs.splice(Math.floor(Math.random() * divs.length), 1)[0]);
-    };
-  });
+// $(document).ready(function(){
+  
+//   $(function() {
+//     var parent = $("#Test");
+//     var divs = parent.children();
+//     while (divs.length) {
+//       parent.append(divs.splice(Math.floor(Math.random() * divs.length), 1)[0]);
+//     };
+// });
 
   // var cards = $(".back");
 

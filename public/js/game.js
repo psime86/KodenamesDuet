@@ -1,12 +1,11 @@
 (function init() {
-  // var socket = io.connect('http://name-of-heroku-app.herokuapp.com'),
+  var socket = io.connect('http://kodenames-duet-007.herokuapp.com')
 
-  var socket = io.connect('http://localhost:3000')
+  // var socket = io.connect('http://localhost:3000')
 
-  // var red = []
-  // var blue = []
   var players = []
   var words = []
+  var pattern = []
 
   var team;
 
@@ -100,16 +99,12 @@
       return;
     }
     assignTeam();
-    console.log(team)
     player = new Player(socket.id, name),
       players.push(player),
-      console.log(players)
     socket.emit('createGame', { players })
   })
 
   socket.on('newGame', function (data) {
-
-    console.log(data)
 
     var message = `Hello, ${data.name}. Your team is ${data.team}. Please ask your friend to enter Game ID: 
       ${data.room}. Waiting for players to join...`;
@@ -123,14 +118,12 @@
   })
 
   $("#player-join").on('click', function () {
-    console.log('clicked')
     $("#join, #game-id").css('display', 'inline')
   })
 
   $("#join-game").on('click', function (data) {
     name = $('#name').val();
     roomId = $('#game-id').val();
-    console.log(players)
     team = team
     if (!name || !roomId) {
       $('#user-message').text('Please enter your name and roomID to continue.')
@@ -138,15 +131,27 @@
     }
     player = new Player(socket.id, name);
     players.push(player)
-    console.log(players)
     $.get("/api/words", function (data) {
       for (i = 0; i < data.length; i++) {
-        console.log(data[i].word)
         words.push(data[i].word)
       }
     }).then(function () {
-      console.log(words)
-      socket.emit('joinGame', { name, room: roomId, words });
+      var parent = $("#Test");
+    var divs = parent.children();
+    while (divs.length) {
+      parent.append(divs.splice(Math.floor(Math.random() * divs.length), 1)[0]);
+    };
+    var cards = $(".back");
+    for (i=0; i < cards.length; i++) {
+      var color = $(cards[i]).data('color')
+      pattern.push(color)
+    }
+
+
+
+
+
+      socket.emit('joinGame', { name, room: roomId, words, pattern });
       // } else if (players.length = 3) {
       //   // socket.emit('joinGame', { name, rooom: roomId });
       //   // createGame();
@@ -155,15 +160,29 @@
 
   })
 
-  socket.on('redirect', function (words) {
-    console.log(words.words)
+  socket.on('redirect', function (data) {
+    console.log(data.pattern)
+    console.log(data.words)
     var cards = $(".clue");
-    for (var i = 0; i < words.words.length; i++) {
-
-      $(cards[i]).html(words.words[i]);
-
-    console.log(words)
+    for (var i = 0; i < data.words.length; i++) {
+      $(cards[i]).html(data.words[i]);
     }
+    var back = $('.back img')
+    for (var i =0; i < data.pattern.length; i++) {
+    
+      if (data.pattern[i] == "blue") {
+        color = "images/blue-spy.jpg"
+      } else if (data.pattern[i] == 'red') {
+        color = 'images/red-spy.jpg'
+      } else if (data.pattern[i] == 'black') {
+        color = "images/black-spy.jpeg"
+      } else {
+        color = "images/bystander.jpg" 
+      }
+
+      $(back[i]).attr('src', color)
+    }
+
     $('#phase-1').css('display', 'none')
     $('#phase-2').css('display', 'inline');
     $("#exampleModalScrollable").modal("show");
