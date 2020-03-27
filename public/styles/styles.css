@@ -1,3 +1,18 @@
 .list-group-item {
   line-height: 2.5;
 }
+
+@font-face {
+  font-family: "SkyFall";
+  src: url("../images/SkyFall.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+
+body {
+  font-family: "SkyFall";
+}
+
+.card-title {
+  font-size: 12px;
+}
