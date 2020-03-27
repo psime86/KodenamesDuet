@@ -7,9 +7,9 @@ module.exports = function(app) {
   });
 
   // Load game page
-  // app.get("/codenames/", function(req, res) {
-  //   res.sendFile(path.join(__dirname, "../public/game.html"));
-  // });
+  app.get("/codenames/", function(req, res) {
+    res.sendFile(path.join(__dirname, "../public/game.html"));
+  });
 
   // Load example page and pass in an example by id
   // app.get("/codenames/", function(req, res) {
