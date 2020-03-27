@@ -1,12 +1,13 @@
 (function init() {
-  // var socket = io.connect('http://kodenames-duet-007.herokuapp.com')
+  var socket = io.connect('http://kodenames-duet-007.herokuapp.com')
 
-  var socket = io.connect('http://localhost:3000')
+//   var socket = io.connect('http://localhost:3000')
 
-  var players = [];
-  var words = [];
-  var pattern = [];
-  var divPattern = [];
+  var players = []
+  var words = []
+  var pattern = []
+  var divPattern = []
+  var room;
 
   var team;
   
@@ -161,6 +162,8 @@
   })
 
   socket.on('redirect', function (data) {
+    room = data.room
+    console.log(data.room)
     console.log(data.pattern)
     console.log(data.words)
     var cards = $(".clue")
@@ -189,13 +192,15 @@
     $('#phase-1').css('display', 'none')
     $('#phase-2').css('display', 'inline');
     $("#exampleModalScrollable").modal("show");
+    return data
   })
 
-  $('.game-card').on('click', function () {
-
+  $('.game-card').on('click', function (data) {
+    console.log(data.room)
+    console.log('I DEF CLICKED THIS ')
      var cardFlipped = $(this).attr('id');
 
-    socket.emit('clickEvent', {cardFlipped})
+    socket.emit('clickEvent', {cardFlipped, room})
   })
 
   socket.on('cardFlip', function (data) {
