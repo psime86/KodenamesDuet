@@ -14,7 +14,7 @@
   var role2
 
   var team = 'blue'
-
+  
   assignRole = function () {
 
     var checkRole = players.filter(function (role) {
@@ -123,10 +123,10 @@
     console.log(data.room)
     console.log(data.pattern)
     console.log(data.words)
-    var cards = $(".clue")
+    var clues = $(".clue")
     var cardDiv = $(".game-card")
     for (var i = 0; i < data.words.length; i++) {
-      $(cards[i]).html(data.words[i]);
+      $(clues[i]).html(data.words[i]);
       $(cardDiv[i]).attr("id", data.divPattern[i])
 
     }
@@ -179,6 +179,8 @@
   })
 
 
+
+
   function reset() {
     $("#spymaster").hide()
     $("#guesser").hide()
@@ -204,7 +206,6 @@ $(".game-card").on("click", function() {
     
     
 });
-
 
 $("#clue-submit").on("click", function(event) {
     event.preventDefault();
@@ -232,65 +233,94 @@ socket.on('clueReceive', function(data) {
        $("#end-turn").show();
 })
 
-var cards = $(".redCard");
-console.log(cards);
+socket.on('cpuRedFlip', function(data) {
+  $('#' + data.flipId).flip(true);
+})
+
+var redCards = $(".redCard");
+var blueCards = $(".blueCard");
+var blackCard = $(".blackCard");
+var neutralCard = $(".neutralCard");
+redArray = [];
+blueArray = [];
+blackArray = [];
+console.log(redArray);
+console.log(blueArray);
+console.log(blackArray);
+for (i=0; i < blackCard.length; i++) {
+    blackArray.push(blackCard[i]);
+}
+for (i=0; i < blueCards.length; i++) {
+    blueArray.push(blueCards[i]);
+}
+for (i=0; i < redCards.length; i++) {
+    redArray.push(redCards[i]);
+}
+function randomFlip() {
+    console.log(redCards);
+    console.log(redArray);
+    var computerCard = redArray.splice(0,1);
+    console.log(computerCard)
+    $(computerCard).flip(true);
+    flipId = $(computerCard).attr('id')
+
+    socket.emit('computerFlip', {flipId, room})
+    
+}
+function blueTurn() {
+    console.log(blueArray);
+    var blueSplice = blueArray.splice(0,1);
+   
+}
+$(blueCards).click(function(event) {
+    event.preventDefault();
+    blueTurn();
+    winOrLose();
+})
+
+$(redCards).click(function(event) {
+    event.preventDefault();
+    console.log(redArray);
+    var computerCard = redArray.splice(0,1);
+    winOrLose();
+})
+
+$(blackCard).click(function(event) {
+    event.preventDefault();
+    console.log(blackArray);
+    var evilCard = blackArray.splice(0,1);
+    winOrLose();
+})
 
 
 
 $("#end-turn").click(function(event) {
-    var computerCard = cards[Math.floor(Math.random() * cards.length)];
-    console.log(computerCard);
-    //alert( "Handler for .click() called." );
     event.preventDefault();
-    $(computerCard).flip(true);
+    randomFlip();
+    winOrLose();
     reset();
     
+    
+    
+    
+    
 });
-
-  //   $("#exampleModalScrollable").modal("show");
-  //   var cards = $(".card-title");
-  //   console.log(cards);
-  //   $.get("/api/words", function (data) {
-  //     for (var i = 0; i < data.length; i++) {
-
-  //       $(cards[i]).html(data[i].word);
-
-
-  //     }
-  //     console.log(data);
-
-
-  //   });
-
-  // });
-
+function winOrLose() {
+   if (redArray.length === 0) {
+    alert("YOU LOSE");
+}
+else if (blueArray.length === 0) {
+    alert("YOU WIN");
+}
+else if (blackArray.length === 0) {
+    alert("YOU LOSE");
+} 
+}
 
   socket.on('err', function (data) {
     $("#user-message").text(data.message);
   })
 
-  // socket.on('disconnect', function(data) {
-  //   var message = `Hello. One of your friends has left the game. Please have a player log in using game ID: 
-  //   ${data.room}`
-
-  //   $('somewhere').text(message)
-  // })
-
-
-  // console.log(wordArray);
-
-
-
-  // // var wordDisplay = document.getElementsByClassName("card-title");
-
-  // var wordDisplay  = $("#test9");
-
-  // $.each(wordArray, function() {
-  //     $(wordDisplay).append(this);
-  //     console.log(this);
-  // })
-
- 
 }())
 
 
