@@ -1,14 +1,18 @@
 {
   "development": {
     "username": "root",
+<<<<<<< HEAD
     "password": "Midnight*1",
+=======
+    "password": "password",
+>>>>>>> 4c00a9dedb1c6e01d0a2571a349f4b6f30b4a0a5
     "database": "words_db",
     "host": "localhost",
     "dialect": "mysql"
   },
   "test": {
     "username": "root",
-    "password": null,
+    "password": "password",
     "database": "testdb",
     "host": "localhost",
     "dialect": "mysql",
