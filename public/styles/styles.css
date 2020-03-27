@@ -2,6 +2,12 @@
   line-height: 2.5;
 }
 
+body {
+  background-image: url("../images/pow-star.png");
+  background-position: center;
+  
+}
+
 @font-face {
   font-family: "SkyFall";
   src: url("../images/SkyFall.ttf") format("truetype");

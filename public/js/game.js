@@ -1,7 +1,7 @@
 (function init() {
-  // var socket = io.connect('http://kodenames-duet-007.herokuapp.com')
+  var socket = io.connect('http://kodenames-duet-007.herokuapp.com')
 
-  var socket = io.connect('http://localhost:3000')
+  // var socket = io.connect('http://localhost:3000')
 
   var players = []
   var words = []
@@ -143,7 +143,7 @@
         parent.append(divs.splice(Math.floor(Math.random() * divs.length), 1)[0]);
       };
       var cards = $(".back");
-      var cardId = $(".card");
+      var cardId = $(".game-card");
      
       for (i = 0; i < cards.length; i++) {
         var color = $(cards[i]).data('color')
@@ -164,7 +164,7 @@
     console.log(data.pattern)
     console.log(data.words)
     var cards = $(".clue")
-    var cardDiv = $(".card")
+    var cardDiv = $(".game-card")
     for (var i = 0; i < data.words.length; i++) {
       $(cards[i]).html(data.words[i]);
       $(cardDiv[i]).attr("id", data.divPattern[i])
@@ -191,7 +191,7 @@
     $("#exampleModalScrollable").modal("show");
   })
 
-  $('.card').on('click', function () {
+  $('.game-card').on('click', function () {
 
      var cardFlipped = $(this).attr('id');
 
