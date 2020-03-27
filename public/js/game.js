@@ -188,16 +188,20 @@
     $("#exampleModalScrollable").modal("show");
   })
 
-  $(document).on('click', 'div.game-board', function () {
+  $('.card').on('click', function () {
 
-    console.log($(this).html())
+     var cardFlipped = $(this).attr('id');
 
-   
-    socket.emit('clickEvent')
+    socket.emit('clickEvent', {cardFlipped})
   })
 
-  socket.on('clickEvent', function (data) {
-    $(data.id).trigger('click')
+  socket.on('cardFlip', function (data) {
+    console.log(data)
+    cardToFlip = $('#' + data.cardFlipped)
+    console.log(cardToFlip)
+    
+    cardToFlip.flip(true);
+
   })
 
   //   $("#exampleModalScrollable").modal("show");

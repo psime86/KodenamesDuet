@@ -16,3 +16,17 @@ body {
 .card-title {
   font-size: 12px;
 }
+
+.front {
+  background-image: url("../images/clue-card.jpg");
+  background-position: center;
+  background-size: cover;
+  position: relative;
+}
+
+.clue {
+  position: absolute;
+  bottom: 10%;
+  left: 10%;
+
+}
