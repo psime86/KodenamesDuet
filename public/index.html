@@ -10,6 +10,7 @@
 </head>
 
 <body>
+    <!--LOG IN-->
     <div class="container">
         <div id="phase-1">
         <div class="jumbotron">
@@ -38,7 +39,7 @@
                     </div>
     
                     <div class='col-10-offset-1 form-inline' style='display:none' id='join'>
-                        <input style='display:none;' class="form-control m-2" id='game-id' type="text" placeholder="enter game ID here">
+                        <input style='display:none;' class="form-control m-3" id='game-id' type="text" placeholder="enter game ID here">
                         <input class="btn btn-danger" id="join-game" type="submit" value="Enter">
                     </div>
                     
@@ -46,7 +47,7 @@
             </div>
         </div>
     </div>
-
+        <!--NAV BAR-->
         <div id='phase-2' style='display: none'>
         <nav class="navbar navbar-expand-lg navbar-light bg-light">
             <a class="navbar-brand" href="#">
@@ -71,17 +72,18 @@
                 </ul>
             </div>
         </nav>
-
+        <!--SPYMASTER INPUT-->
         <div class="container-fluid mt-2">
             <div class="row" id="chat">
                 <div class="col-8 offset-2">
                     <h3>Spymaster, please submit a clue</h3>
                     <form class="form-inline">
                         <div class="form-group mb-2">
-                            <input id="word" autocomplete="off" class="form-control" type="text" placeholder="WORD">
+                            <input id="clue-word" autocomplete="off" class="form-control" type="text" placeholder="WORD">
                         </div>
                         <div class="form-group mx-sm-3 mb-2">
-                            <select id="number"class="form-control">
+                            <select id="clue-number"class="form-control">
+                                <option>0</option>
                                 <option>1</option>
                                 <option>2</option>
                                 <option>3</option>
@@ -93,13 +95,15 @@
                                 <option>9</option>
                               </select>
                         </div>
-                        <button type="submit" class="btn btn-danger mb-2">Submit Clue</button>
-                        <button type="end-turn" id="end-turn" class="btn btn-danger mb-2">End Turn</button>
+                        <button type="submit" class="btn btn-danger mb-2" id="clue-submit">Submit Clue</button>
+                        
                     </form>
+                    <!--GUESSER CLUE AREA-->
+                    <div class="inline text-center"><div id="clue-div"></div><button type="end-turn" id="end-turn" class="btn btn-danger m-2">End Turn</button>    
                 </div>
-                <div id="clue-div"></div>
+                
             </div>
-
+            
             <div id="FirstTeam" style="text-align: center;"></div>
 
             <div class="game-board">
@@ -108,7 +112,7 @@
                     <div class="col-12">
                         <div class="row" id="Test">
 
-
+                            <!--GAME BOARD-->
                             <div class="col-2 mr-3" id="color">
                                 <div class="GameBoard">
                                     <div class="card game-card m-3" id="card-1" style="width: 150px; height: 100px;">
@@ -508,22 +512,57 @@
         integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
         crossorigin="anonymous"></script>
     <script src="https://cdn.rawgit.com/nnattawat/flip/master/dist/jquery.flip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.dev.js"></script>
+    <script src="node_modules/jquery/dist/jquery.min.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="js/game.js"></script>
     <script>
-
-
         $(".game-card").flip();
+        
+        
 
+        function reset() {
+            $("#end-turn").hide();
+            $("#clue-div").hide();
+            $("#clue-word").val("");
+            $("#clue-number").val("0");
+        };
+
+        reset();
         var flip = $(".game-card").data("flip-model");
-        for (i=0; i < $(".game-card").length; i++){
+        for (i=0; i < $(".game-card").length; i++) {
             var isFlipped = false;
         }
+        $(".game-card").on("click", function() {
+            
+           $(".game-card").on("flip:done", function() {
+               $(this).off(".flip");
+               isFlipped = true;
+               console.log(isFlipped);
+           });
+            
+            
+            
+        });
+        
+        
+        $("#clue-submit").on("click", function(event) {
+            event.preventDefault();
+            $("#clue-div").show();
+            var clueWord = $("#clue-word").val().trim();
+            var clueNumber = $("#clue-number").val().trim();
+            
+            if (clueWord === "") {
+                $("#clue-div").text("PLEASE ENTER A VALID CLUE");
+            }
+            else {
+               $("#clue-div").text("CLUE: " + clueWord + " || " + "NUMBER OF CARDS: " + clueNumber); 
+               $("#end-turn").show();
+               
+            }
 
-        $(".game-card").on("click", function(){
-            $(".game-card").on("flip:done", function(){
-                $(this).off(".flip");
-                isFlipped = true;
-                console.log(isFlipped);
-            });
+
+            
         });
     
         var cards = $(".redCard");
@@ -537,6 +576,8 @@
             //alert( "Handler for .click() called." );
             event.preventDefault();
             $(computerCard).flip(true);
+            reset();
+            
         });
 
 
@@ -545,10 +586,7 @@
         
         
     </script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.dev.js"></script>
-    <script src="node_modules/jquery/dist/jquery.min.js"></script>
-    <script src="/socket.io/socket.io.js"></script>
-    <script src="js/game.js"></script>
+    
     <!-- <script src="js/index.js"></script> -->
 
 </body>
