@@ -36,11 +36,12 @@
                     <div class='col-2'>
                         <input class="btn btn-danger mt-3" id="player-join" type="submit" value="Join Game">
                     </div>
-                    <div class='col-10-offset-1' style='display:none' id='join'>
-                        <input style='display:none;' class="form-control m-3" id='game-id' type="text"
-                            placeholder="enter game ID here">
-                        <input class="btn btn-danger mt-3" id="join-game" type="submit" value="Enter">
+    
+                    <div class='col-10-offset-1 form-inline' style='display:none' id='join'>
+                        <input style='display:none;' class="form-control m-3" id='game-id' type="text" placeholder="enter game ID here">
+                        <input class="btn btn-danger" id="join-game" type="submit" value="Enter">
                     </div>
+                    
                 </div>
             </div>
         </div>
@@ -71,16 +72,31 @@
             </div>
         </nav>
 
-        <div class="container-fluid">
+        <div class="container-fluid mt-2">
             <div class="row" id="chat">
                 <div class="col-8 offset-2">
-                    <h1>Welcome to a New Game</h1>
-                    <form action="">
-                        <input id="word" autocomplete="off">
-                        <input id='number' autocomplet="off">
-                        <button>Send</button>
+                    <h3>Spymaster, please submit a clue</h3>
+                    <form class="form-inline">
+                        <div class="form-group mb-2">
+                            <input id="word" autocomplete="off" class="form-control" type="text" placeholder="WORD">
+                        </div>
+                        <div class="form-group mx-sm-3 mb-2">
+                            <select id="number"class="form-control">
+                                <option>1</option>
+                                <option>2</option>
+                                <option>3</option>
+                                <option>4</option>
+                                <option>5</option>
+                                <option>6</option>
+                                <option>7</option>
+                                <option>8</option>
+                                <option>9</option>
+                              </select>
+                        </div>
+                        <button type="submit" class="btn btn-danger mb-2">Submit Clue</button>
                     </form>
                 </div>
+                <div id="clue-div"></div>
             </div>
 
             <div id="FirstTeam" style="text-align: center;"></div>
@@ -94,9 +110,9 @@
 
                             <div class="col-2 mr-3" id="color">
                                 <div class="GameBoard">
-                                    <div class="card m-3" id="card" style="width: 150px; height: 100px;">
+                                    <div class="card m-3" id="card-1" style="width: 150px; height: 100px;">
                                         <div class="card-body front px-0" style="background-color: white;">
-                                            <h5 class="card-title text-center clue" id="card-1"></h5>
+                                            <h5 class="card-title text-center clue"></h5>
                                         </div>
                                         <div class="back" id="teams" data-color='blue'>
                                             <img src="images/blue-spy.jpg" style="width: 100%; height: 100%;">
@@ -107,9 +123,9 @@
 
                             <div class="col-2 mr-3" id="color">
                                 <div class="GameBoard">
-                                    <div class="card m-3" id="card" style="width: 150px; height: 100px;">
+                                    <div class="card m-3" id="card-2" style="width: 150px; height: 100px;">
                                         <div class="card-body front px-0" style="background-color: white;">
-                                            <h5 class="card-title text-center clue" id="card-2"></h5>
+                                            <h5 class="card-title text-center clue"></h5>
                                         </div>
                                         <div class="back" id="teams" data-color="blue">
                                             <img src="images/blue-spy.jpg" style="width: 100%; height: 100%;">
@@ -121,9 +137,9 @@
 
                             <div class="col-2 mr-3" id="color">
                                 <div class="GameBoard">
-                                    <div class="card m-3" id="card" style="width: 150px; height: 100px;">
+                                    <div class="card m-3" id="card-3" style="width: 150px; height: 100px;">
                                         <div class="card-body front px-0" style="background-color: white;">
-                                            <h5 class="card-title text-center clue" id="card-3"></h5>
+                                            <h5 class="card-title text-center clue"></h5>
                                         </div>
                                         <div class="back" id="teams" data-color="blue">
                                             <img src="images/blue-spy.jpg" style="width: 100%; height: 100%;">
@@ -134,9 +150,9 @@
 
                             <div class="col-2 mr-3" id="color">
                                 <div class="GameBoard">
-                                    <div class="card m-3" id="card" style="width: 150px; height: 100px;">
+                                    <div class="card m-3" id="card-4" style="width: 150px; height: 100px;">
                                         <div class="card-body front px-0" style="background-color: white;">
-                                            <h5 class="card-title text-center clue" id="card-4"></h5>
+                                            <h5 class="card-title text-center clue"></h5>
                                         </div>
                                         <div class="back" id="teams" data-color="blue">
                                             <img src="images/blue-spy.jpg" style="width: 100%; height: 100%;">
@@ -147,9 +163,9 @@
 
                             <div class="col-2 mr-3" id="color">
                                 <div class="GameBoard">
-                                    <div class="card m-3" id="card" style="width: 150px; height: 100px;">
+                                    <div class="card m-3" id="card-5" style="width: 150px; height: 100px;">
                                         <div class="card-body front px-0" style="background-color: white;">
-                                            <h5 class="card-title text-center clue" id="card-5"></h5>
+                                            <h5 class="card-title text-center clue"></h5>
                                         </div>
                                         <div class="back" id="teams" data-color="blue">
                                             <img src="images/blue-spy.jpg" style="width: 100%; height: 100%;">
@@ -160,20 +176,7 @@
 
                             <div class="col-2 mr-3" id="color">
                                 <div class="GameBoard">
-                                    <div class="card m-3" id="card" style="width: 150px; height: 100px;">
-                                        <div class="card-body front px-0" style="background-color: white;">
-                                            <h5 class="card-title text-center clue">Special title treatment</h5>
-                                        </div>
-                                        <div class="back" id="teams" data-color="blue">
-                                            <img src="images/blue-spy.jpg" style="width: 100%; height: 100%;">
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="col-2 mr-3" id="color">
-                                <div class="GameBoard">
-                                    <div class="card m-3" id="card" style="width: 150px; height: 100px;">
+                                    <div class="card m-3" id="card-6" style="width: 150px; height: 100px;">
                                         <div class="card-body front px-0" style="background-color: white;">
                                             <h5 class="card-title text-center clue">Special title treatment</h5>
                                         </div>
@@ -186,7 +189,7 @@
 
                             <div class="col-2 mr-3" id="color">
                                 <div class="GameBoard">
-                                    <div class="card m-3" id="card" style="width: 150px; height: 100px;">
+                                    <div class="card m-3" id="card-7" style="width: 150px; height: 100px;">
                                         <div class="card-body front px-0" style="background-color: white;">
                                             <h5 class="card-title text-center clue">Special title treatment</h5>
                                         </div>
@@ -199,7 +202,7 @@
 
                             <div class="col-2 mr-3" id="color">
                                 <div class="GameBoard">
-                                    <div class="card m-3" id="card" style="width: 150px; height: 100px;">
+                                    <div class="card m-3" id="card-8" style="width: 150px; height: 100px;">
                                         <div class="card-body front px-0" style="background-color: white;">
                                             <h5 class="card-title text-center clue">Special title treatment</h5>
                                         </div>
@@ -212,7 +215,20 @@
 
                             <div class="col-2 mr-3" id="color">
                                 <div class="GameBoard">
-                                    <div class="card m-3" id="card" style="width: 150px; height: 100px;">
+                                    <div class="card m-3" id="card-9" style="width: 150px; height: 100px;">
+                                        <div class="card-body front px-0" style="background-color: white;">
+                                            <h5 class="card-title text-center clue">Special title treatment</h5>
+                                        </div>
+                                        <div class="back" id="teams" data-color="blue">
+                                            <img src="images/blue-spy.jpg" style="width: 100%; height: 100%;">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-2 mr-3" id="color">
+                                <div class="GameBoard">
+                                    <div class="card m-3" id="card-10" style="width: 150px; height: 100px;">
                                         <div class="card-body front px-0" style="background-color: white;">
                                             <h5 class="card-title text-center clue">Special title treatment</h5>
                                         </div>
@@ -225,7 +241,7 @@
 
                             <div class="col-2 mr-3" id="color">
                                 <div class="GameBoard">
-                                    <div class="card m-3" id="card" style="width: 150px; height: 100px;">
+                                    <div class="card m-3" id="card-11" style="width: 150px; height: 100px;">
                                         <div class="card-body front px-0" style="background-color: white;">
                                             <h5 class="card-title text-center clue">Special title treatment</h5>
                                         </div>
@@ -238,7 +254,7 @@
 
                             <div class="col-2 mr-3" id="color">
                                 <div class="GameBoard">
-                                    <div class="card m-3" id="card" style="width: 150px; height: 100px;">
+                                    <div class="card m-3" id="card-12" style="width: 150px; height: 100px;">
                                         <div class="card-body front px-0" style="background-color: white;">
                                             <h5 class="card-title text-center clue">Special title treatment</h5>
                                         </div>
@@ -251,7 +267,7 @@
 
                             <div class="col-2 mr-3" id="color">
                                 <div class="GameBoard">
-                                    <div class="card m-3" id="card" style="width: 150px; height: 100px;">
+                                    <div class="card m-3" id="card-13" style="width: 150px; height: 100px;">
                                         <div class="card-body front px-0" style="background-color: white;">
                                             <h5 class="card-title text-center clue">Special title treatment</h5>
                                         </div>
@@ -264,7 +280,7 @@
 
                             <div class="col-2 mr-3" id="color">
                                 <div class="GameBoard">
-                                    <div class="card m-3" id="card" style="width: 150px; height: 100px;">
+                                    <div class="card m-3" id="card-14" style="width: 150px; height: 100px;">
                                         <div class="card-body front px-0" style="background-color: white;">
                                             <h5 class="card-title text-center clue">Special title treatment</h5>
                                         </div>
@@ -277,7 +293,7 @@
 
                             <div class="col-2 mr-3" id="color">
                                 <div class="GameBoard">
-                                    <div class="card m-3" id="card" style="width: 150px; height: 100px;">
+                                    <div class="card m-3" id="card-15" style="width: 150px; height: 100px;">
                                         <div class="card-body front px-0" style="background-color: white;">
                                             <h5 class="card-title text-center clue">Special title treatment</h5>
                                         </div>
@@ -294,7 +310,7 @@
 
                             <div class="col-2 mr-3" id="color">
                                 <div class="GameBoard">
-                                    <div class="card m-3" id="card" style="width: 150px; height: 100px;">
+                                    <div class="card m-3" id="card-16" style="width: 150px; height: 100px;">
                                         <div class="card-body front px-0" style="background-color: white;">
                                             <h5 class="card-title text-center clue">Special title treatment</h5>
                                         </div>
@@ -307,7 +323,7 @@
 
                             <div class="col-2 mr-3" id="color">
                                 <div class="GameBoard">
-                                    <div class="card m-3" id="card" style="width: 150px; height: 100px;">
+                                    <div class="card m-3" id="card-17" style="width: 150px; height: 100px;">
                                         <div class="card-body front px-0" style="background-color: white;">
                                             <h5 class="card-title text-center clue">Special title treatment</h5>
                                         </div>
@@ -320,7 +336,7 @@
 
                             <div class="col-2 mr-3" id="color">
                                 <div class="GameBoard">
-                                    <div class="card m-3" id="card" style="width: 150px; height: 100px;">
+                                    <div class="card m-3" id="card-18" style="width: 150px; height: 100px;">
                                         <div class="card-body front px-0" style="background-color: white;">
                                             <h5 class="card-title text-center clue">Special title treatment</h5>
                                         </div>
@@ -333,7 +349,7 @@
 
                             <div class="col-2 mr-3" id="color">
                                 <div class="GameBoard">
-                                    <div class="card m-3" id="card" style="width: 150px; height: 100px;">
+                                    <div class="card m-3" id="card-19" style="width: 150px; height: 100px;">
                                         <div class="card-body front px-0" style="background-color: white;">
                                             <h5 class="card-title text-center clue">Special title treatment</h5>
                                         </div>
@@ -346,7 +362,7 @@
 
                             <div class="col-2 mr-3" id="color">
                                 <div class="GameBoard">
-                                    <div class="card m-3" id="card" style="width: 150px; height: 100px;">
+                                    <div class="card m-3" id="card-20" style="width: 150px; height: 100px;">
                                         <div class="card-body front px-0" style="background-color: white;">
                                             <h5 class="card-title text-center clue">Special title treatment</h5>
                                         </div>
@@ -360,7 +376,7 @@
 
                             <div class="col-2 mr-3" id="color">
                                 <div class="GameBoard">
-                                    <div class="card m-3" id="card" style="width: 150px; height: 100px;">
+                                    <div class="card m-3" id="card-21" style="width: 150px; height: 100px;">
                                         <div class="card-body front px-0" style="background-color: white;">
                                             <h5 class="card-title text-center clue">Special title treatment</h5>
                                         </div>
@@ -373,7 +389,7 @@
 
                             <div class="col-2 mr-3" id="color">
                                 <div class="GameBoard">
-                                    <div class="card m-3" id="card" style="width: 150px; height: 100px;">
+                                    <div class="card m-3" id="card-22" style="width: 150px; height: 100px;">
                                         <div class="card-body front px-0" style="background-color: white;">
                                             <h5 class="card-title text-center clue">Special title treatment</h5>
                                         </div>
@@ -386,7 +402,7 @@
 
                             <div class="col-2 mr-3" id="color">
                                 <div class="GameBoard">
-                                    <div class="card m-3" id="card" style="width: 150px; height: 100px;">
+                                    <div class="card m-3" id="card-23" style="width: 150px; height: 100px;">
                                         <div class="card-body front px-0" style="background-color: white;">
                                             <h5 class="card-title text-center clue">Special title treatment</h5>
                                         </div>
@@ -399,7 +415,7 @@
 
                             <div class="col-2 mr-3" id="color">
                                 <div class="GameBoard">
-                                    <div class="card m-3" id="card" style="width: 150px; height: 100px;">
+                                    <div class="card m-3" id="card-24" style="width: 150px; height: 100px;">
                                         <div class="card-body front px-0" style="background-color: white;">
                                             <h5 class="card-title text-center clue">Special title treatment</h5>
                                         </div>
@@ -412,7 +428,7 @@
 
                             <div class="col-2 mr-3" id="color">
                                 <div class="GameBoard">
-                                    <div class="card m-3" id="card" style="width: 150px; height: 100px;">
+                                    <div class="card m-3" id="card-25" style="width: 150px; height: 100px;">
                                         <div class="card-body front px-0" style="background-color: white;">
                                             <h5 class="card-title text-center clue">Special title treatment</h5>
                                         </div>
@@ -444,6 +460,7 @@
                                     <button type="button" class="btn btn-danger" data-dismiss="modal"
                                         id="start-game">START GAME</button>
                                 
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -470,7 +487,7 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                
             </div>
         </div>
     </div>
@@ -491,6 +508,12 @@
     <script src="https://cdn.rawgit.com/nnattawat/flip/master/dist/jquery.flip.min.js"></script>
     <script>
         $(".card").flip();
+
+        // var flip = $(".card").data("flip-model");
+        // console.log(flip);
+        // if (flip.isFlipped) {
+        //     $(".card").off(".flip");
+        // }
     </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.dev.js"></script>
     <script src="node_modules/jquery/dist/jquery.min.js"></script>
