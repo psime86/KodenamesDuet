@@ -12,16 +12,9 @@
   var room;
   var role1
   var role2
-  var redCards = $(".redCard");
-  var blueCards = $(".blueCard");
-  var blackCard = $(".blackCard");
-  var neutralCard = $(".neutralCard");
-  var redArray = [];
-  var blueArray = [];
-  var blackArray = [];
 
   var team = 'blue'
-
+  
   assignRole = function () {
 
     var checkRole = players.filter(function (role) {
@@ -49,11 +42,11 @@
       $('#user-message').text('Please enter your name!')
       return;
     }
-
+    
     player = new Player(socket.id, name),
       players.push(player),
       role1 = player.role
-    socket.emit('createGame', { players })
+      socket.emit('createGame', { players })
   })
 
   socket.on('newGame', function (data) {
@@ -102,7 +95,7 @@
       };
       var cards = $(".back");
       var cardId = $(".game-card");
-
+     
       for (i = 0; i < cards.length; i++) {
         var color = $(cards[i]).data('color')
         var divId = $(cardId[i]).attr('id')
@@ -115,7 +108,7 @@
 
   })
 
-  socket.on('setupFunction', function (data) {
+  socket.on('setupFunction', function(data) {
     console.log('setupFunctionReceived')
     console.log(role2)
     if (role2 == 'guesser') {
@@ -157,33 +150,36 @@
     $('#phase-2').css('display', 'inline');
     $("#exampleModalScrollable").modal("show");
 
-    //   var playerArray = data.players 
+  //   var playerArray = data.players 
 
-    //   if (playerArray[0].role === 'spymaster') {
-    //     $()
-    //   }
+  //   if (playerArray[0].role === 'spymaster') {
+  //     $()
+  //   }
 
 
 
-    //   return data
+  //   return data
   })
 
   $('.game-card').on('click', function (data) {
     console.log(data.room)
     console.log('I DEF CLICKED THIS ')
-    var cardFlipped = $(this).attr('id');
+     var cardFlipped = $(this).attr('id');
 
-    socket.emit('clickEvent', { cardFlipped, room })
+    socket.emit('clickEvent', {cardFlipped, room})
   })
 
   socket.on('cardFlip', function (data) {
     console.log(data)
     cardToFlip = $('#' + data.cardFlipped)
     console.log(cardToFlip)
-
+    
     cardToFlip.flip(true);
 
   })
+
+
+
 
   function reset() {
     $("#spymaster").hide()
@@ -192,125 +188,134 @@
     $("#clue-div").hide();
     $("#clue-word").val("");
     $("#clue-number").val("0");
-  };
+};
 
-  reset();
-  var flip = $(".game-card").data("flip-model");
-  for (i = 0; i < $(".game-card").length; i++) {
+reset();
+var flip = $(".game-card").data("flip-model");
+for (i=0; i < $(".game-card").length; i++) {
     var isFlipped = false;
-  }
-  $(".game-card").on("click", function () {
+}
+$(".game-card").on("click", function() {
+    
+   $(".game-card").on("flip:done", function() {
+       $(this).off(".flip");
+       isFlipped = true;
+       console.log(isFlipped);
+   });
+    
+    
+    
+});
 
-    $(".game-card").on("flip:done", function () {
-      $(this).off(".flip");
-      isFlipped = true;
-      console.log(isFlipped);
-    });
-
-
-
-  });
-
-  $("#clue-submit").on("click", function (event) {
+$("#clue-submit").on("click", function(event) {
     event.preventDefault();
     $("#clue-div").show();
     var clueWord = $("#clue-word").val().trim();
     var clueNumber = $("#clue-number").val().trim();
-
+    
     if (clueWord === "") {
-      $("#clue-div").text("PLEASE ENTER A VALID CLUE");
+        $("#clue-div").text("PLEASE ENTER A VALID CLUE");
     }
     else {
-      $("#clue-div").text("Guesser's Turn");
+       $("#clue-div").text("CLUE: " + clueWord + " || " + "NUMBER OF CARDS: " + clueNumber); 
+       $("#end-turn").show();
 
-      socket.emit('clueSubmit', { clueWord, clueNumber, room })
-
+       socket.emit('clueSubmit', {clueWord, clueNumber, room})
+       
     }
+    
+});
 
-  });
+socket.on('clueReceive', function(data) {
+  console.log('clueReceive happened')
+  $("#clue-div").show();
+  $("#clue-div").text("CLUE: " + data.clueWord + " || " + "NUMBER OF CARDS: " + data.clueNumber); 
+       $("#end-turn").show();
+})
 
-  socket.on('clueReceive', function (data) {
-    console.log('clueReceive happened')
-    $("#clue-div").show();
-    $("#clue-div").text("CLUE: " + data.clueWord + " || " + "NUMBER OF CARDS: " + data.clueNumber);
-    $("#end-turn").show();
-  })
+socket.on('cpuRedFlip', function(data) {
+  $('#' + data.flipId).flip(true);
+})
 
-  socket.on('cpuRedFlip', function (data) {
-   
-    $('#' + data.flipId).flip(true);
-  })
-
-  for (i = 0; i < blackCard.length; i++) {
+var redCards = $(".redCard");
+var blueCards = $(".blueCard");
+var blackCard = $(".blackCard");
+var neutralCard = $(".neutralCard");
+redArray = [];
+blueArray = [];
+blackArray = [];
+console.log(redArray);
+console.log(blueArray);
+console.log(blackArray);
+for (i=0; i < blackCard.length; i++) {
     blackArray.push(blackCard[i]);
-  }
-  for (i = 0; i < blueCards.length; i++) {
+}
+for (i=0; i < blueCards.length; i++) {
     blueArray.push(blueCards[i]);
-  }
-  for (i = 0; i < redCards.length; i++) {
+}
+for (i=0; i < redCards.length; i++) {
     redArray.push(redCards[i]);
-  }
-  function randomFlip() {
+}
+function randomFlip() {
     console.log(redCards);
     console.log(redArray);
-    var computerCard = redArray.splice(0, 1);
+    var computerCard = redArray.splice(0,1);
     console.log(computerCard)
     $(computerCard).flip(true);
     flipId = $(computerCard).attr('id')
-    console.log(flipId)
 
-    socket.emit('computerFlip', { flipId, room })
-
-  }
-  function blueTurn() {
+    socket.emit('computerFlip', {flipId, room})
+    
+}
+function blueTurn() {
     console.log(blueArray);
-    var blueSplice = blueArray.splice(0, 1);
-
-  }
-  $(blueCards).click(function (event) {
+    var blueSplice = blueArray.splice(0,1);
+   
+}
+$(blueCards).click(function(event) {
     event.preventDefault();
     blueTurn();
     winOrLose();
-  })
+})
 
-  $(redCards).click(function (event) {
+$(redCards).click(function(event) {
     event.preventDefault();
     console.log(redArray);
-    var computerCard = redArray.splice(0, 1);
+    var computerCard = redArray.splice(0,1);
     winOrLose();
-  })
+})
 
-  $(blackCard).click(function (event) {
+$(blackCard).click(function(event) {
     event.preventDefault();
     console.log(blackArray);
-    var evilCard = blackArray.splice(0, 1);
+    var evilCard = blackArray.splice(0,1);
     winOrLose();
-  })
+})
 
 
 
-  $("#end-turn").click(function (event) {
+$("#end-turn").click(function(event) {
     event.preventDefault();
     randomFlip();
     winOrLose();
     reset();
-
-
-
-
-
-  });
-  function winOrLose() {
-    if (redArray.length === 0) {
-      alert("YOU LOSE");
-    }
-    else if (blueArray.length === 0) {
-      alert("YOU WIN");
-    }
-    else if (blackArray.length === 0) {
-      alert("YOU LOSE");
-    }
-  }
+    
+    
+    
+    
+    
+});
+function winOrLose() {
+   if (redArray.length === 0) {
+    alert("YOU LOSE");
+}
+else if (blueArray.length === 0) {
+    alert("YOU WIN");
+}
+else if (blackArray.length === 0) {
+    alert("YOU LOSE");
+} 
+}
 
   socket.on('err', function (data) {
     $("#user-message").text(data.message);
