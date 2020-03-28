@@ -58,6 +58,8 @@
 
     $('#user-message').text(message)
 
+    $(".game-card").unbind("click")
+
   })
 
   $("#player-join").on('click', function () {
@@ -99,9 +101,16 @@
         divPattern.push(divId)
       }
       socket.emit('joinGame', { name, players, room: roomId, words, pattern, divPattern });
-
+      socket.emit('spySetup', { pattern })
     })
 
+  })
+
+  socket.on('spyColors', function (data) {
+    var spyPattern = $(".game-card")
+    for (var i = 0; i < data.pattern.length; i++) {
+    $(spyPattern[i]).css({"border":"solid 3px", "border-color": data.pattern[i]})
+    }
   })
 
   socket.on('redirect', function (data) {
@@ -114,7 +123,6 @@
     for (var i = 0; i < data.words.length; i++) {
       $(clues[i]).html(data.words[i]);
       $(cardDiv[i]).attr("id", data.divPattern[i])
-      // $(cardDiv[i]).css({"border":"solid 3px", "border-color": data.pattern});
     }
     
     var back = $('.back img')
@@ -131,6 +139,7 @@
       }
 
       $(back[i]).attr('src', color)
+
     }
 
     $('#phase-1').css('display', 'none')
@@ -149,8 +158,6 @@
   })
 
   $('.game-card').on('click', function (data) {
-    console.log(data.room)
-    console.log('I DEF CLICKED THIS ')
      var cardFlipped = $(this).attr('id');
 
     socket.emit('clickEvent', {cardFlipped, room})
@@ -312,9 +319,9 @@ else if (blackArray.length === 0) {
 } 
 }
 
-$(redCards).css({"border":"solid 3px red"});
-$(blueCards).css({"border": "solid 3px blue"});
-$(blackCard).css({"border": "dashed 4px black"});
+// $(redCards).css({"border":"solid 3px red"});
+// $(blueCards).css({"border": "solid 3px blue"});
+// $(blackCard).css({"border": "dashed 4px black"});
 
   socket.on('err', function (data) {
     $("#user-message").text(data.message);
