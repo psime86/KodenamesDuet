@@ -217,15 +217,6 @@
     
   });
 
-  $("#end-turn").click(function (event) {
-    event.preventDefault();
-    randomFlip();
-    winOrLose();
-    reset();
-    $("#clue-div").show()
-    $("#clue-div").text("Please wait for your next clue.")
-  });
-
   socket.on('clueReceive', function (data) {
     console.log('clueReceive happened');
     $("#clue-div").show();
