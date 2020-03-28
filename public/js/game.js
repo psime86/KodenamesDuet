@@ -1,24 +1,20 @@
 (function init() {
-  var socket = io.connect('http://kodenames-duet-007.herokuapp.com')
+  // var socket = io.connect('http://kodenames-duet-007.herokuapp.com')
 
-//   var socket = io.connect('http://localhost:3000')
+  var socket = io.connect('http://localhost:3000')
 
+  var turns = 8
+  var isPlaying = false;
   var players = []
   var words = []
   var pattern = []
   var divPattern = []
   var room;
+  var role1
+  var role2
 
-  var team;
+  var team = 'blue'
   
-  assignTeam = function () {
-    if (Math.floor(Math.random() * 2)) {
-      team = 'red'
-    } else {
-      team = 'blue'
-    }
-  }
-
   assignRole = function () {
 
     var checkRole = players.filter(function (role) {
@@ -40,82 +36,34 @@
     this.role = assignRole();
   }
 
-  //   var checkTeam = players.filter(function (team) {
-  //     return this.team == "red"
-  //   })
-  //   if (Math.floor(Math.random() * 2) === 0 && checkTeam.length <= 1) {
-  //     return "red"
-
-  //   } else {
-  //     return "blue"
-  //   }
-  // }
-  //   this.role = function () {
-
-  //     if (this.team === 'red') {
-
-  //       red.push(player)
-
-  //       var checkRedRole = red.filter(function (team) {
-  //         return this.role == "spymaster"
-  //       })
-
-  //       if (Math.floor(Math.random() * 2) === 0 && checkRedRole.length === 0) {
-  //         console.log(red)
-  //         console.log(blue)
-  //         return 'spymaster'
-
-  //       }
-  //       else {
-  //         console.log(red)
-  //         console.log(blue)
-  //         return 'guesser'
-  //       }
-  //     } else {
-
-  //       blue.push(player)
-
-  //       var checkBlueRole = blue.filter(function (team) {
-  //         return this.role == 'spymaster'
-  //       })
-
-  //       if (Math.floor(Math.random() * 2) === 0 && checkBlueRole.length === 0) {
-  //         console.log(red)
-  //         console.log(blue)
-  //         return 'spymaster'
-  //       }
-  //       else {
-  //         console.log(red)
-  //         console.log(blue)
-  //         return 'guesser'
-  //       }
-  //     }
-
-  //   }
-  // }
-
   $('#player-start').on('click', function () {
     var name = $('#name').val();
     if (!name) {
       $('#user-message').text('Please enter your name!')
       return;
     }
-    assignTeam();
+    
     player = new Player(socket.id, name),
       players.push(player),
+      role1 = player.role
       socket.emit('createGame', { players })
   })
 
   socket.on('newGame', function (data) {
 
+    room = data.room
+
     var message = `Hello, ${data.name}. Your team is ${data.team}. Please ask your friend to enter Game ID: 
-      ${data.room}. Waiting for players to join...`;
+      ${data.room}. Waiting for player to join...`;
 
     $('#user-message').text(message)
 
-    team = data.team
-
-    return team
+    if (role1 == 'guesser') {
+      $('#spymaster').css('display', 'none')
+    } else {
+      $('#guesser').css('display', 'none')
+    }
+    console.log(role1)
 
   })
 
@@ -133,6 +81,8 @@
     }
     player = new Player(socket.id, name);
     players.push(player)
+    role2 = player.role
+
     $.get("/api/words", function (data) {
       for (i = 0; i < data.length; i++) {
         words.push(data[i].word)
@@ -152,13 +102,20 @@
         pattern.push(color)
         divPattern.push(divId)
       }
-      socket.emit('joinGame', { name, room: roomId, words, pattern, divPattern });
-      // } else if (players.length = 3) {
-      //   // socket.emit('joinGame', { name, rooom: roomId });
-      //   // createGame();
-      //   // socket.emit('startGame', { players });
+      socket.emit('joinGame', { name, players, room: roomId, words, pattern, divPattern });
+
     })
 
+  })
+
+  socket.on('setupFunction', function(data) {
+    console.log('setupFunctionReceived')
+    console.log(role2)
+    if (role2 == 'guesser') {
+      $('#spymaster').css('display', 'none')
+    } else {
+      $('#guesser').css('display', 'none')
+    }
   })
 
   socket.on('redirect', function (data) {
@@ -166,10 +123,10 @@
     console.log(data.room)
     console.log(data.pattern)
     console.log(data.words)
-    var cards = $(".clue")
+    var clues = $(".clue")
     var cardDiv = $(".game-card")
     for (var i = 0; i < data.words.length; i++) {
-      $(cards[i]).html(data.words[i]);
+      $(clues[i]).html(data.words[i]);
       $(cardDiv[i]).attr("id", data.divPattern[i])
 
     }
@@ -192,7 +149,16 @@
     $('#phase-1').css('display', 'none')
     $('#phase-2').css('display', 'inline');
     $("#exampleModalScrollable").modal("show");
-    return data
+
+  //   var playerArray = data.players 
+
+  //   if (playerArray[0].role === 'spymaster') {
+  //     $()
+  //   }
+
+
+
+  //   return data
   })
 
   $('.game-card').on('click', function (data) {
@@ -212,7 +178,12 @@
 
   })
 
+
+
+
   function reset() {
+    $("#spymaster").hide()
+    $("#guesser").hide()
     $("#end-turn").hide();
     $("#clue-div").hide();
     $("#clue-word").val("");
@@ -236,7 +207,6 @@ $(".game-card").on("click", function() {
     
 });
 
-
 $("#clue-submit").on("click", function(event) {
     event.preventDefault();
     $("#clue-div").show();
@@ -249,131 +219,108 @@ $("#clue-submit").on("click", function(event) {
     else {
        $("#clue-div").text("CLUE: " + clueWord + " || " + "NUMBER OF CARDS: " + clueNumber); 
        $("#end-turn").show();
+
+       socket.emit('clueSubmit', {clueWord, clueNumber, room})
        
     }
-
-
     
 });
 
-        var redCards = $(".redCard");
-        var blueCards = $(".blueCard");
-        var blackCard = $(".blackCard");
-        var neutralCard = $(".neutralCard");
-        var redArray = [];
-        var blueArray = [];
-        var blackArray = [];
-        console.log(redArray);
-        console.log(blueArray);
-        console.log(blackArray);
-        for (i=0; i < blackCard.length; i++) {
-            blackArray.push(blackCard[i]);
-        }
-        for (i=0; i < blueCards.length; i++) {
-            blueArray.push(blueCards[i]);
-        }
-        for (i=0; i < redCards.length; i++) {
-            redArray.push(redCards[i]);
+socket.on('clueReceive', function(data) {
+  console.log('clueReceive happened')
+  $("#clue-div").show();
+  $("#clue-div").text("CLUE: " + data.clueWord + " || " + "NUMBER OF CARDS: " + data.clueNumber); 
+       $("#end-turn").show();
+})
 
-        }
-        function randomFlip() {
-            console.log(redCards);
-            console.log(redArray);
-            var computerCard = redArray.splice(0,1);
-            $(computerCard).flip(true);
-            
-        }
-        function blueTurn() {
-            console.log(blueArray);
-            var blueSplice = blueArray.splice(0,1);
-           
-        }
-        $(blueCards).click(function(event) {
-            event.preventDefault();
-            blueTurn();
-            turnOver();
-            winOrLose();
-        })
+socket.on('cpuRedFlip', function(data) {
+  $('#' + data.flipId).flip(true);
+})
 
-        $(redCards).click(function(event) {
-            event.preventDefault();
-            console.log(redArray);
-            var clickedCard = $(this).attr("id");
-            var clickIndex = redArray.indexOf(clickedCard);
-            console.log(clickIndex);
-            console.log(clickedCard);
-            redArray.splice(clickIndex,1);
-            winOrLose();
-        })
+var redCards = $(".redCard");
+var blueCards = $(".blueCard");
+var blackCard = $(".blackCard");
+var neutralCard = $(".neutralCard");
+redArray = [];
+blueArray = [];
+blackArray = [];
+console.log(redArray);
+console.log(blueArray);
+console.log(blackArray);
+for (i=0; i < blackCard.length; i++) {
+    blackArray.push(blackCard[i]);
+}
+for (i=0; i < blueCards.length; i++) {
+    blueArray.push(blueCards[i]);
+}
+for (i=0; i < redCards.length; i++) {
+    redArray.push(redCards[i]);
+}
+function randomFlip() {
+    console.log(redCards);
+    console.log(redArray);
+    var computerCard = redArray.splice(0,1);
+    console.log(computerCard)
+    $(computerCard).flip(true);
+    flipId = $(computerCard).attr('id')
 
-        $(blackCard).click(function(event) {
-            event.preventDefault();
-            console.log(blackArray);
-            var evilCard = blackArray.splice(0,1);
-            winOrLose();
-        })
+    socket.emit('computerFlip', {flipId, room})
+    
+}
+function blueTurn() {
+    console.log(blueArray);
+    var blueSplice = blueArray.splice(0,1);
+   
+}
+$(blueCards).click(function(event) {
+    event.preventDefault();
+    blueTurn();
+    winOrLose();
+})
 
-        
+$(redCards).click(function(event) {
+    event.preventDefault();
+    console.log(redArray);
+    var computerCard = redArray.splice(0,1);
+    winOrLose();
+})
 
-        $("#end-turn").click(function(event) {
-            event.preventDefault();
-            randomFlip();
-            winOrLose();
-            reset();
-            
-            
-            
-            
-            
-        });
-
-        function turnOver() {
-            var clueNumber = $("#clue-number").val().trim();
-            
-            // if (blueArray.length )
-        }
-
-        function winOrLose() {
-          if (redArray.length === 0) {
-           alert("YOU LOSE");
-       }
-       else if (blueArray.length === 0) {
-           alert("YOU WIN");
-       }
-       else if (blackArray.length === 0) {
-           alert("YOU LOSE");
-       } 
-       }
+$(blackCard).click(function(event) {
+    event.preventDefault();
+    console.log(blackArray);
+    var evilCard = blackArray.splice(0,1);
+    winOrLose();
+})
 
 
 
+$("#end-turn").click(function(event) {
+    event.preventDefault();
+    randomFlip();
+    winOrLose();
+    reset();
+    
+    
+    
+    
+    
+});
+function winOrLose() {
+   if (redArray.length === 0) {
+    alert("YOU LOSE");
+}
+else if (blueArray.length === 0) {
+    alert("YOU WIN");
+}
+else if (blackArray.length === 0) {
+    alert("YOU LOSE");
+} 
+}
 
   socket.on('err', function (data) {
     $("#user-message").text(data.message);
   })
 
-  // socket.on('disconnect', function(data) {
-  //   var message = `Hello. One of your friends has left the game. Please have a player log in using game ID: 
-  //   ${data.room}`
-
-  //   $('somewhere').text(message)
-  // })
-
-
-  // console.log(wordArray);
-
-
-
-  // // var wordDisplay = document.getElementsByClassName("card-title");
-
-  // var wordDisplay  = $("#test9");
-
-  // $.each(wordArray, function() {
-  //     $(wordDisplay).append(this);
-  //     console.log(this);
-  // })
-
- 
 }())
 
 
