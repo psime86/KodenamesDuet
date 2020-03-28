@@ -212,6 +212,10 @@
 
   })
 
+  socket.on("cpuRedFlip", function(data) {
+    $("#" + data.flipId).flip(true);
+  })
+
   function reset() {
     $("#end-turn").hide();
     $("#clue-div").hide();
@@ -263,9 +267,7 @@ $("#clue-submit").on("click", function(event) {
         var redArray = [];
         var blueArray = [];
         var blackArray = [];
-        console.log(redArray);
-        console.log(blueArray);
-        console.log(blackArray);
+        
         for (i=0; i < blackCard.length; i++) {
             blackArray.push(blackCard[i]);
         }
@@ -281,7 +283,8 @@ $("#clue-submit").on("click", function(event) {
             console.log(redArray);
             var computerCard = redArray.splice(0,1);
             $(computerCard).flip(true);
-            
+            var flipId = $(computerCard).attr("id");
+            socket.emit("computerFlip", {flipId, room})
         }
         function blueTurn() {
             console.log(blueArray);
@@ -291,19 +294,21 @@ $("#clue-submit").on("click", function(event) {
         $(blueCards).click(function(event) {
             event.preventDefault();
             blueTurn();
-            turnOver();
+            // turnOver();
             winOrLose();
         })
-
+        //this works!
         $(redCards).click(function(event) {
             event.preventDefault();
             console.log(redArray);
-            var clickedCard = $(this).attr("id");
+            var clickedCard = this;
             var clickIndex = redArray.indexOf(clickedCard);
+            console.log($(clickedCard).attr("id"));
             console.log(clickIndex);
             console.log(clickedCard);
             redArray.splice(clickIndex,1);
             winOrLose();
+            
         })
 
         $(blackCard).click(function(event) {
@@ -327,11 +332,11 @@ $("#clue-submit").on("click", function(event) {
             
         });
 
-        function turnOver() {
-            var clueNumber = $("#clue-number").val().trim();
+        // function turnOver() {
+        //     var clueNumber = $("#clue-number").val().trim();
             
-            // if (blueArray.length )
-        }
+        //     // if (blueArray.length )
+        // }
 
         function winOrLose() {
           if (redArray.length === 0) {
@@ -345,7 +350,7 @@ $("#clue-submit").on("click", function(event) {
        } 
        }
 
-
+    
 
 
   socket.on('err', function (data) {

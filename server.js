@@ -56,6 +56,11 @@ require("./routes/htmlRoutes")(app);
     socket.to(data.room).emit('cardFlip', {cardFlipped: data.cardFlipped, room: data.room})
   })
 
+  socket.on("computerFlip", function (data) {
+    flipId = data.flipId;
+    socket.to(data.room).emit("cpuRedFlip", {flipId})
+  })
+
   // socket.on('startGame', function(data) {
   //   console.log(data)
   //     var destination = '/game.html'
