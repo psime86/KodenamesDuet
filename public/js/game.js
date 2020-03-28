@@ -273,11 +273,14 @@ $(redCards).click(function(event) {
   console.log(clickIndex);
   console.log(clickedCard);
   redArray.splice(clickIndex,1);
-  winOrLose();
+  turnOver();
   
 })
 
-
+$(neutralCards).click(function(event) {
+  event.preventDefault();
+  turnOver();
+})
 
 $(blackCard).click(function(event) {
     event.preventDefault();
@@ -298,7 +301,12 @@ $("#end-turn").click(function(event) {
 });
 
 function turnOver() {
-
+  event.preventDefault();
+    randomFlip();
+    winOrLose();
+    reset();  
+    $("#clue-div").show()
+    $("#clue-div").text("Please wait for your next clue.");
 }
 function winOrLose() {
    if (redArray.length === 0) {
