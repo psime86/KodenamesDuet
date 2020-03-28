@@ -58,6 +58,8 @@
 
     $('#user-message').text(message)
 
+    $(".game-card").unbind("click")
+
   })
 
   $("#player-join").on('click', function () {
@@ -148,8 +150,6 @@
   })
 
   $('.game-card').on('click', function (data) {
-    console.log(data.room)
-    console.log('I DEF CLICKED THIS ')
      var cardFlipped = $(this).attr('id');
 
     socket.emit('clickEvent', {cardFlipped, room})
