@@ -5,13 +5,12 @@
 
   var turns = 8
   var isPlaying = false;
-  var players = []
-  var words = []
-  var pattern = []
-  var divPattern = []
+  var players = [];
+  var words = [];
+  var pattern = [];
+  var divPattern = [];
   var room;
-  var role1
-  var role2
+  
 
   var team = 'blue'
   
@@ -45,7 +44,10 @@
     
     player = new Player(socket.id, name),
       players.push(player),
-      role1 = player.role
+      $("#player-start").hide();
+      $("#player-join").hide();
+      $("#game-id").hide();
+      $("#join-game").hide();
       socket.emit('createGame', { players })
   })
 
@@ -204,7 +206,8 @@ $("#clue-submit").on("click", function(event) {
     $("#clue-div").show();
     var clueWord = $("#clue-word").val().trim();
     var clueNumber = $("#clue-number").val().trim();
-    
+    $("#clue-word").val("");
+    $("#clue-number").val(0);
     if (clueWord === "") {
         $("#clue-div").text("PLEASE ENTER A VALID CLUE");
     }
