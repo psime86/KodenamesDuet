@@ -44,7 +44,7 @@ require("./routes/htmlRoutes")(app);
       // socket.emit('player', { name: data.name, room: data.room })
       // console.log(data)
       io.in(data.room).emit('redirect', {words: data.words, pattern: data.pattern, divPattern: data.divPattern, room: data.room, players: data.players})
-      socket.broadcast.emit('spyColors', {pattern: data.pattern})
+      socket.to(data.room).emit('spyColors', {pattern: data.pattern})
 
     } else {
       socket.emit('err', { message: 'Sorry this room is full or does not exist!' })
@@ -60,7 +60,7 @@ require("./routes/htmlRoutes")(app);
   socket.on('clickEvent', function (data) {
     console.log('event received')
 
-    socket.to(data.room).emit('cardFlip', {cardFlipped: data.cardFlipped, room: data.room})
+    socket.to(data.room).emit('cardFlip', {cardFlipped: data.cardFlipped, room: data.room, words: data.words})
   })
 
   socket.on('clueSubmit', function(data) {
@@ -75,7 +75,11 @@ require("./routes/htmlRoutes")(app);
   })
 
   socket.on('gameLose', function(data) {
-        socket.to(data.room).emit('youLost', {lose: data.lose})
+
+        
+
+    socket.to(data.room).emit('youLost', {lose: data.lose})
+
   });
 
   socket.on('gameEnd', function(data) {
