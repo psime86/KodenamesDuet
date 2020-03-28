@@ -326,21 +326,21 @@
 
       lose = true;
 
-      socket.emit('gameLose', { lose })
+      socket.emit('gameLose', { lose, room })
     }
     else if (blueArray.length === 0) {
       $("#endgame-modal").modal("show");
 
       lose = false
 
-      socket.emit('gameEnd', { lose })
+      socket.emit('gameEnd', { lose, room })
     }
     else if (blackArray.length === 0) {
       $("#gameover-modal").modal("show");
 
       lose = true;
 
-      socket.emit('gameLose', { lose })
+      socket.emit('gameLose', { lose, room })
     }
   }
 

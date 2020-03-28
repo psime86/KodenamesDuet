@@ -54,7 +54,7 @@ require("./routes/htmlRoutes")(app);
   socket.on('spySetup', function(data) {
     pattern = data.pattern
 
-    socket.broadcast.emit('spyColors', {pattern})
+    socket.to(data.room).emit('spyColors', {pattern})
   })
 
   socket.on('clickEvent', function (data) {
@@ -75,11 +75,11 @@ require("./routes/htmlRoutes")(app);
   })
 
   socket.on('gameLose', function(data) {
-        socket.broadcast.emit('youLost', {lose: data.lose})
+        socket.to(data.room).emit('youLost', {lose: data.lose})
   });
 
   socket.on('gameEnd', function(data) {
-    socket.broadcast.emit('youWon', {lose: data.lose})
+    socket.to(data.room).emit('youWon', {lose: data.lose})
   })
 
 })
