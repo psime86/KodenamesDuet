@@ -125,7 +125,7 @@
       $(cardDiv[i]).attr("id", data.divPattern[i])
     }
     
-    var back = $('.back-img')
+    var back = $('.back img')
     for (var i = 0; i < data.pattern.length; i++) {
 
       if (data.pattern[i] == "blue") {
