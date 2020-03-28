@@ -33,7 +33,7 @@
   }
 
   $('#player-start').on('click', function () {
-    var name = $('#name').val();
+    var name = $('#name').val()
     if (!name) {
       $('#user-message').text('Please enter your name!')
       return;
@@ -67,7 +67,7 @@
     $('#clue-div').show()
     $('#clue-div').text('Welcome Guesser, Please wait for your clue... ')
     name = $('#name').val();
-    roomId = $('#game-id').val();
+    roomId = $('#game-id').val().toLowerCase();
     team = team
     if (!name || !roomId) {
       $('#user-message').text('Please enter your name and roomID to continue.')
