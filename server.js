@@ -74,24 +74,16 @@ require("./routes/htmlRoutes")(app);
     socket.to(data.room).emit('cpuRedFlip', {flipId})
   })
 
-  // socket.on('startGame', function(data) {
-  //   console.log(data)
-  //     var destination = '/game.html'
-  //     socket.broadcast.to(data.room).emit('redirect', destination)
-  // });
-
-  socket.on('playTurn', function(data) {
-    socket.broadcast.to(data.room).emit('turnPlayed', {
-      tile: data.tile,
-      room: data.room
-    });
+  socket.on('gameLose', function(data) {
+        socket.broadcast.emit('youLost', {lose: data.lose})
   });
 
-  socket.on('gameEnded', function(data) {
-    socket.broadcast.to(data.room).emit('gameEnded', data);
-  });
+  socket.on('gameEnd', function(data) {
+    socket.broadcast.emit('youWon', {lose: data.lose})
+  })
 
-});
+})
+
 
 var syncOptions = { force: false };
 
