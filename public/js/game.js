@@ -101,9 +101,16 @@
         divPattern.push(divId)
       }
       socket.emit('joinGame', { name, players, room: roomId, words, pattern, divPattern });
-
+      socket.emit('spySetup', { pattern })
     })
 
+  })
+
+  socket.on('spyColors', function (data) {
+    var spyPattern = $(".game-card")
+    for (var i = 0; i < data.pattern.length; i++) {
+    $(spyPattern[i]).css({"border":"solid 3px", "border-color": data.pattern[i]})
+    }
   })
 
   socket.on('redirect', function (data) {
@@ -116,9 +123,9 @@
     for (var i = 0; i < data.words.length; i++) {
       $(clues[i]).html(data.words[i]);
       $(cardDiv[i]).attr("id", data.divPattern[i])
-
     }
-    var back = $('.back img')
+    
+    var back = $('.back-img')
     for (var i = 0; i < data.pattern.length; i++) {
 
       if (data.pattern[i] == "blue") {
@@ -132,6 +139,7 @@
       }
 
       $(back[i]).attr('src', color)
+
     }
 
     $('#phase-1').css('display', 'none')
@@ -225,7 +233,7 @@ socket.on('cpuRedFlip', function(data) {
 var redCards = $(".redCard");
 var blueCards = $(".blueCard");
 var blackCard = $(".blackCard");
-var neutralCard = $(".neutralCard");
+var neutralCards = $(".neutralCard");
 redArray = [];
 blueArray = [];
 blackArray = [];
@@ -276,6 +284,8 @@ $(redCards).click(function(event) {
   
 })
 
+
+
 $(blackCard).click(function(event) {
     event.preventDefault();
     console.log(blackArray);
@@ -283,7 +293,7 @@ $(blackCard).click(function(event) {
     winOrLose();
 })
 
-
+    
 
 $("#end-turn").click(function(event) {
     event.preventDefault();
@@ -293,6 +303,10 @@ $("#end-turn").click(function(event) {
     $("#clue-div").show()
     $("#clue-div").text("Please wait for your next clue.")
 });
+
+function turnOver() {
+
+}
 function winOrLose() {
    if (redArray.length === 0) {
     alert("YOU LOSE");
@@ -304,6 +318,10 @@ else if (blackArray.length === 0) {
     alert("YOU LOSE");
 } 
 }
+
+// $(redCards).css({"border":"solid 3px red"});
+// $(blueCards).css({"border": "solid 3px blue"});
+// $(blackCard).css({"border": "dashed 4px black"});
 
   socket.on('err', function (data) {
     $("#user-message").text(data.message);
