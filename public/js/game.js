@@ -41,8 +41,12 @@
 
     player = new Player(socket.id, name),
       players.push(player),
+      $("#player-start").hide();
+      $("#player-join").hide();
+      $("#game-id").hide();
+      $("#join-game").hide();
+      socket.emit('createGame', { players })
       
-    socket.emit('createGame', { players })
   })
 
   socket.on('newGame', function (data) {
@@ -97,7 +101,7 @@
         divPattern.push(divId)
       }
       socket.emit('joinGame', { name, players, room: roomId, words, pattern, divPattern });
-      socket.emit('spySetup', { pattern })
+      socket.emit('spySetup', { pattern, room: roomId })
     })
 
   })
@@ -180,12 +184,14 @@
     });
 
   });
-
-  $("#clue-submit").on("click", function (event, data) {
+  
+  $("#clue-submit").on("click", function (event) {
     event.preventDefault();
     $("#clue-div").show();
     var clueWord = $("#clue-word").val().trim().toLowerCase();
     var clueNumber = $("#clue-number").val().trim();
+    $("#clue-word").val("");
+    $("#clue-number").val(0);
 
     var word = $('.clue')
     for(i=0; i < 26; i++) {
@@ -221,7 +227,7 @@
   });
 
   socket.on('clueReceive', function (data) {
-    console.log('clueReceive happened')
+    console.log('clueReceive happened');
     $("#clue-div").show();
     $("#clue-div").text("CLUE: " + data.clueWord + " || " + "NUMBER OF CARDS: " + data.clueNumber);
     $("#end-turn").show();
@@ -262,6 +268,7 @@
   for (i = 0; i < redCards.length; i++) {
     redArray.push(redCards[i]);
   }
+  //function that handles the computer turn "AI"
   function randomFlip() {
     console.log(redCards);
     console.log(redArray);
@@ -273,17 +280,19 @@
     socket.emit('computerFlip', { flipId, room })
 
   }
+
   function blueTurn() {
     console.log(blueArray);
     var blueSplice = blueArray.splice(0, 1);
 
   }
+
   $(blueCards).click(function (event) {
     event.preventDefault();
     blueTurn();
     winOrLose();
   })
-
+  //making sure that when a red card is clicked instead of chosen by the computer its taken out of the array.
   $(redCards).click(function (event) {
     event.preventDefault();
     console.log(redArray);
@@ -310,7 +319,7 @@
   })
 
 
-
+  //what happens when you click the 'end turn' button.
   $("#end-turn").click(function (event) {
     event.preventDefault();
     randomFlip();
@@ -319,7 +328,7 @@
     $("#clue-div").show()
     $("#clue-div").text("Please wait for your next clue.")
   });
-
+  //what happens when your turn is over.
   function turnOver() {
     event.preventDefault();
     randomFlip();
@@ -328,27 +337,28 @@
     $("#clue-div").show()
     $("#clue-div").text("Please wait for your next clue.");
   }
+  //win or loss variables
   function winOrLose() {
     if (redArray.length === 0) {
       $("#gameover-modal").modal("show");
 
       lose = true;
 
-      socket.emit('gameLose', { lose })
+      socket.emit('gameLose', { lose, room })
     }
     else if (blueArray.length === 0) {
       $("#endgame-modal").modal("show");
 
       lose = false
 
-      socket.emit('gameEnd', { lose })
+      socket.emit('gameEnd', { lose, room })
     }
     else if (blackArray.length === 0) {
       $("#gameover-modal").modal("show");
 
       lose = true;
 
-      socket.emit('gameLose', { lose })
+      socket.emit('gameLose', { lose, room })
     }
   }
 

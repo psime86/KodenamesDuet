@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kodenames Duet</title>
+    <link rel="shortcut icon" href="images/codenames-icon.ico"/>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
         integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="styles/styles.css">
@@ -32,14 +33,14 @@
                     <h5 class="card-title">Please enter your nickname below.</h5>
                     <input class="form-control" id='name' type="text" placeholder="Nickname">
                     <div class='row'>
-                        <div class='col-2'>
-                            <input class="btn btn-danger mt-3" id="player-start" type="submit" value="New Game">
+                        <div >
+                            <input class="btn btn-danger m-3" id="player-start" type="submit" value="New Game (Spymaster)">
                         </div>
-                        <div class='col-2'>
-                            <input class="btn btn-danger mt-3" id="player-join" type="submit" value="Join Game">
+                        <div>
+                            <input class="btn btn-danger m-3" id="player-join" type="submit" value="Join Game (Field Operative)">
                         </div>
 
-                        <div class='col-10-offset-1 form-inline' style='display:none' id='join'>
+                        <div class='form-inline' style='display:none' id='join'>
                             <input style='display:none;' class="form-control m-3" id='game-id' type="text"
                                 placeholder="enter game ID here">
                             <input class="btn btn-danger" id="join-game" type="submit" value="Enter">
@@ -515,10 +516,48 @@
                                     </div>
                                     <div class="modal-body">
                                         Welcome to Kodenames!
-                                        Each team consists of two players: a spymaster (clue giver) and the agent
-                                        (guesser).
-                                        The game board is a 5X5 grid of randomly generated words.
-                                        The spymasters will be able to see
+                                        In this game, you and another person race against the computer to uncover all of your agents before the computer can.
+                                        <hr>
+                                        One player takes on the role of Clue Giver (Spymaster) and the other is the Guesser (Field Operative).
+                                        <hr>
+                                        The Spymaster knows the secret identities of the 25 agents on the board.  The Field Operative will only know them by their codenames.
+                                        <hr>
+                                        The Spymaster is allowed to give a one word clue.  
+                                        <br>
+                                        <br>
+                                        A clue may relate to multiple words on the table.  
+                                        <br>
+                                        <br>
+                                        The field operative tries to guess which words their spymaster meant.
+                                        <br>
+                                        <br>
+                                        When a field operative clicks on a card its secret identity is revealed.  
+                                        <br>
+                                        <br>
+                                        If the field operative guessed correctly, they may continue guessing, until they run out of ideas for the given clue
+                                        or until they've hit a wrong person.  
+                                        <br>
+                                        <br>
+                                        Then the computer takes its turn and flips over one of it's agents.  
+                                        <br>
+                                        <br>
+                                        The first team to flip over all of their agents wins the game!
+                                        <hr>
+                                        <strong>Notes: </strong>
+                                        <br>
+                                        The spymaster's one word clue cannot be any of the codenames visible on the table.  
+                                        <br>
+                                        <br>
+                                        The field operative must always make at least one guess.
+                                        <br>
+                                        But they may stop guessing at any time, but usually you want to guess as many words as the spymaster said.
+                                        <br>
+                                        <br>
+                                        If a field operative flips over a red spy card or a bystander card, the turn immediately ends, and the computer flips over a red card.
+                                        <br>
+                                        <br>
+                                        If the field operative flips over the <strong>assassin card</strong> the game immediately ends and you lose.
+
                                     </div>
                                     <div class="modal-footer">
                                         <button type="button" class="btn btn-danger" data-dismiss="modal"
@@ -541,10 +580,47 @@
                                     </div>
                                     <div class="modal-body">
                                         Welcome to Kodenames!
-                                        Each team consists of two players: a spymaster (clue giver) and the agent
-                                        (guesser).
-                                        The game board is a 5X5 grid of randomly generated words.
-                                        The spymasters will be able to see
+                                        In this game, you and another person race against the computer to uncover all of your agents before the computer can.
+                                        <hr>
+                                        One player takes on the role of Clue Giver (Spymaster) and the other is the Guesser (Field Operative).
+                                        <hr>
+                                        The Spymaster knows the secret identities of the 25 agents on the board.  The Field Operative will only know them by their codenames.
+                                        <hr>
+                                        The Spymaster is allowed to give a one word clue.  
+                                        <br>
+                                        <br>
+                                        A clue may relate to multiple words on the table.  
+                                        <br>
+                                        <br>
+                                        The field operative tries to guess which words their spymaster meant.
+                                        <br>
+                                        <br>
+                                        When a field operative clicks on a card its secret identity is revealed.  
+                                        <br>
+                                        <br>
+                                        If the field operative guessed correctly, they may continue guessing, until they run out of ideas for the given clue
+                                        or until they've hit a wrong person.  
+                                        <br>
+                                        <br>
+                                        Then the computer takes its turn and flips over one of it's agents.  
+                                        <br>
+                                        <br>
+                                        The first team to flip over all of their agents wins the game!
+                                        <hr>
+                                        <strong>Notes: </strong>
+                                        <br>
+                                        The spymaster's one word clue cannot be any of the codenames visible on the table.  
+                                        <br>
+                                        <br>
+                                        The field operative must always make at least one guess.
+                                        <br>
+                                        But they may stop guessing at any time, but usually you want to guess as many words as the spymaster said.
+                                        <br>
+                                        <br>
+                                        If a field operative flips over a red spy card or a bystander card, the turn immediately ends, and the computer flips over a red card.
+                                        <br>
+                                        <br>
+                                        If the field operative flips over the <strong>assassin card</strong> the game immediately ends and you lose.
                                     </div>
                                     <div class="modal-footer">
                                         <button type="button" class="btn btn-danger" data-dismiss="modal">CLOSE</button>
@@ -569,7 +645,7 @@
                                         <div class="mt-3 text-center validate-add"></div>
                                     </div>
                                     <div class="modal-footer">
-                                        <a class="btn btn-danger" href="index.html" role="button">RESTART</a>
+                                        <a class="btn btn-danger" href="index.html" role="button">PLAY AGAIN</a>
                                         
                                     </div>
                                 </div>
@@ -593,7 +669,7 @@
                                         <div class="mt-3 text-center validate-add"></div>
                                     </div>
                                     <div class="modal-footer">
-                                        <a class="btn btn-danger" href="index.html" role="button">RESTART</a>
+                                        <a class="btn btn-danger" href="index.html" role="button">PLAY AGAIN</a>
 
                                     </div>
                                 </div>
