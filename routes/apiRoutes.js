@@ -16,11 +16,13 @@ module.exports = function(app) {
   
 
   // Create a new example
-  // app.post("/api/words", function(req, res) {
-  //   db.Example.create(req.body).then(function(dbExample) {
-  //     res.json(dbExample);
-  //   });
-  // });
+  app.post("/api/newwords", function(req, res) {
+    db.Words.create({
+      word: req.body.word
+    }).then(function(dbWords) {
+      res.json(dbWords);
+    });
+  });
 
   // Delete an example by id
   // app.delete("/api/examples/:id", function(req, res) {
