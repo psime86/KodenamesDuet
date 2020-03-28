@@ -280,11 +280,14 @@ $(redCards).click(function(event) {
   console.log(clickIndex);
   console.log(clickedCard);
   redArray.splice(clickIndex,1);
-  winOrLose();
+  turnOver();
   
 })
 
-
+$(neutralCards).click(function(event) {
+  event.preventDefault();
+  turnOver();
+})
 
 $(blackCard).click(function(event) {
     event.preventDefault();
@@ -305,23 +308,43 @@ $("#end-turn").click(function(event) {
 });
 
 function turnOver() {
-
+  event.preventDefault();
+    randomFlip();
+    winOrLose();
+    reset();  
+    $("#clue-div").show()
+    $("#clue-div").text("Please wait for your next clue.");
 }
 function winOrLose() {
    if (redArray.length === 0) {
-    alert("YOU LOSE");
+    $("#gameover-modal").modal("show");
 }
 else if (blueArray.length === 0) {
-    alert("YOU WIN");
+    $("#endgame-modal").modal("show");
 }
 else if (blackArray.length === 0) {
-    alert("YOU LOSE");
+    $("#gameover-modal").modal("show");
 } 
 }
 
-// $(redCards).css({"border":"solid 3px red"});
-// $(blueCards).css({"border": "solid 3px blue"});
-// $(blackCard).css({"border": "dashed 4px black"});
+
+
+// Adding new data to our table.
+function insertWord(event) {
+  event.preventDefault();
+  var newWord = {
+    word: $(".new-word").val().trim()
+  };
+
+  $.post("/api/newwords", newWord);
+    $(".validate-add").text("Word Successfully Added!");
+  }
+  
+
+  
+
+$(document).on("click", ".db-submit", insertWord);
+
 
   socket.on('err', function (data) {
     $("#user-message").text(data.message);
