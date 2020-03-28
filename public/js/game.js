@@ -58,13 +58,6 @@
 
     $('#user-message').text(message)
 
-    if (role1 == 'guesser') {
-      $('#spymaster').css('display', 'none')
-    } else {
-      $('#guesser').css('display', 'none')
-    }
-    console.log(role1)
-
   })
 
   $("#player-join").on('click', function () {
@@ -72,6 +65,9 @@
   })
 
   $("#join-game").on('click', function (data) {
+    $('#spymaster').hide();
+    $('#clue-div').show()
+    $('#clue-div').text('Welcome Guesser, Please wait for your clue... ')
     name = $('#name').val();
     roomId = $('#game-id').val();
     team = team
@@ -106,16 +102,6 @@
 
     })
 
-  })
-
-  socket.on('setupFunction', function(data) {
-    console.log('setupFunctionReceived')
-    console.log(role2)
-    if (role2 == 'guesser') {
-      $('#spymaster').css('display', 'none')
-    } else {
-      $('#guesser').css('display', 'none')
-    }
   })
 
   socket.on('redirect', function (data) {
@@ -183,10 +169,8 @@
 
 
   function reset() {
-    $("#spymaster").hide()
-    $("#guesser").hide()
     $("#end-turn").hide();
-    $("#clue-div").hide();
+    $("#clue-div").text();
     $("#clue-word").val("");
     $("#clue-number").val("0");
 };
@@ -218,9 +202,8 @@ $("#clue-submit").on("click", function(event) {
         $("#clue-div").text("PLEASE ENTER A VALID CLUE");
     }
     else {
-       $("#clue-div").text("CLUE: " + clueWord + " || " + "NUMBER OF CARDS: " + clueNumber); 
-       $("#end-turn").show();
-
+       $("#clue-div").text("GUESSER'S TURN"); 
+       $("#spymaster").hide();
        socket.emit('clueSubmit', {clueWord, clueNumber, room})
        
     }
@@ -236,6 +219,8 @@ socket.on('clueReceive', function(data) {
 
 socket.on('cpuRedFlip', function(data) {
   $('#' + data.flipId).flip(true);
+  $("#spymaster").show()
+  $("#clue-div").text("Please enter your next clue.")
 })
 
 var redCards = $(".redCard");
@@ -307,8 +292,9 @@ $("#end-turn").click(function(event) {
     event.preventDefault();
     randomFlip();
     winOrLose();
-    turnOver();
-    reset();
+    reset();  
+    $("#clue-div").show()
+    $("#clue-div").text("Please wait for your next clue.")
 });
 
 function turnOver() {
