@@ -60,7 +60,7 @@ require("./routes/htmlRoutes")(app);
   socket.on('clickEvent', function (data) {
     console.log('event received')
 
-    socket.to(data.room).emit('cardFlip', {cardFlipped: data.cardFlipped, room: data.room})
+    socket.to(data.room).emit('cardFlip', {cardFlipped: data.cardFlipped, room: data.room, words: data.words})
   })
 
   socket.on('clueSubmit', function(data) {

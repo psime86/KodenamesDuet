@@ -109,7 +109,6 @@
     }
   })
 
-
   socket.on('redirect', function (data) {
     room = data.room
     console.log(data.room)
@@ -143,21 +142,12 @@
     $('#phase-2').css('display', 'inline');
     $("#exampleModalScrollable").modal("show");
 
-    //   var playerArray = data.players 
-
-    //   if (playerArray[0].role === 'spymaster') {
-    //     $()
-    //   }
-
-
-
-    //   return data
   })
 
   $('.game-card').on('click', function (data) {
     var cardFlipped = $(this).attr('id');
 
-    socket.emit('clickEvent', { cardFlipped, room })
+    socket.emit('clickEvent', { cardFlipped, room, words })
   })
 
   socket.on('cardFlip', function (data) {
@@ -167,17 +157,6 @@
 
     cardToFlip.flip(true);
 
-  })
-
-  socket.on('youLost', function(data) {
-    console.log('YOU LOST')
-    $("#gameover-modal").modal("show");
-
-  })
-
-  socket.on('youWon', function(data) {
-    console.log('YOU WON')
-    $("#endgame-modal").modal("show");
   })
 
   function reset() {
@@ -200,26 +179,45 @@
       console.log(isFlipped);
     });
 
-
-
   });
 
-  $("#clue-submit").on("click", function (event) {
+  $("#clue-submit").on("click", function (event, data) {
     event.preventDefault();
     $("#clue-div").show();
-    var clueWord = $("#clue-word").val().trim();
+    var clueWord = $("#clue-word").val().trim().toLowerCase();
     var clueNumber = $("#clue-number").val().trim();
 
-    if (clueWord === "") {
-      $("#clue-div").text("PLEASE ENTER A VALID CLUE");
+    var word = $('.clue')
+    for(i=0; i < 26; i++) {
+      words.push($(word[i]).text().toLowerCase())
     }
-    else {
+
+    for(i=0; i < words.length; i++) {
+    if (clueWord !== "" && words[i].toLowerCase() !== clueWord) {
+      console.log(clueWord)
+      console.log(words[i])
       $("#clue-div").text("GUESSER'S TURN");
       $("#spymaster").hide();
       socket.emit('clueSubmit', { clueWord, clueNumber, room })
-
+      return
+    } else if (words[i].toLowerCase() == clueWord) {
+      $("#clue-div").text("PLEASE USE A WORD NOT ON THE BOARD")
+      return
+    } else {
+      $("#clue-div").text("PLEASE ENTER A CLUE")
     }
 
+  }
+    
+  });
+
+  $("#end-turn").click(function (event) {
+    event.preventDefault();
+    randomFlip();
+    winOrLose();
+    reset();
+    $("#clue-div").show()
+    $("#clue-div").text("Please wait for your next clue.")
   });
 
   socket.on('clueReceive', function (data) {
@@ -233,6 +231,17 @@
     $('#' + data.flipId).flip(true);
     $("#spymaster").show()
     $("#clue-div").text("Please enter your next clue.")
+  })
+
+  socket.on('youLost', function(data) {
+    console.log('YOU LOST')
+    $("#gameover-modal").modal("show");
+
+  })
+
+  socket.on('youWon', function(data) {
+    console.log('YOU WON')
+    $("#endgame-modal").modal("show");
   })
 
   // these need to be here, not at the top.
@@ -343,8 +352,6 @@
     }
   }
 
-
-
   // Adding new data to our table.
   function insertWord(event) {
     event.preventDefault();
@@ -356,11 +363,7 @@
     $(".validate-add").text("Word Successfully Added!");
   }
 
-
-
-
   $(document).on("click", ".db-submit", insertWord);
-
 
   socket.on('err', function (data) {
     $("#user-message").text(data.message);
