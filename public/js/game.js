@@ -347,7 +347,7 @@ $(document).on("click", ".db-submit", insertWord);
 
 
   socket.on('err', function (data) {
-    $(".user-message").text(data.message);
+    $("#user-message").text(data.message);
   })
 
 }())
