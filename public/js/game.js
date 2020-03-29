@@ -42,11 +42,11 @@
     player = new Player(socket.id, name),
       players.push(player),
       $("#player-start").hide();
-      $("#player-join").hide();
-      $("#game-id").hide();
-      $("#join-game").hide();
-      socket.emit('createGame', { players })
-      
+    $("#player-join").hide();
+    $("#game-id").hide();
+    $("#join-game").hide();
+    socket.emit('createGame', { players })
+
   })
 
   socket.on('newGame', function (data) {
@@ -115,6 +115,7 @@
 
   socket.on('redirect', function (data) {
     room = data.room
+    words = data.words
     console.log(data.room)
     console.log(data.pattern)
     console.log(data.words)
@@ -184,37 +185,34 @@
     });
 
   });
-  
+
   $("#clue-submit").on("click", function (event) {
     event.preventDefault();
     $("#clue-div").show();
-    var clueWord = $("#clue-word").val().trim().toLowerCase();
+    var clueWord = $("#clue-word").val().trim().toUpperCase();
     var clueNumber = $("#clue-number").val().trim();
-    $("#clue-word").val("");
-    $("#clue-number").val(0);
 
-    var word = $('.clue')
-    for(i=0; i < 26; i++) {
-      words.push($(word[i]).text().toLowerCase())
+    if (!clueWord) {
+      $("#clue-div").text("PLEASE ENTER A CLUE")
+
     }
+    else if (words.includes(clueWord)) {
+      $("#clue-div").text("PLEASE USE A WORD NOT ON THE BOARD")
+      $("#clue-word").val("");
 
-    for(i=0; i < words.length; i++) {
-    if (clueWord !== "" && words[i].toLowerCase() !== clueWord) {
-      console.log(clueWord)
-      console.log(words[i])
+    }
+    else if (clueNumber == 0) {
+      $("#clue-div").text("PLEASE SELECT A NUMBER OF CARDS YOUR CLUE IS ASSOCIATED WITH")
+
+    }
+    else {
       $("#clue-div").text("GUESSER'S TURN");
       $("#spymaster").hide();
       socket.emit('clueSubmit', { clueWord, clueNumber, room })
-      return
-    } else if (words[i].toLowerCase() == clueWord) {
-      $("#clue-div").text("PLEASE USE A WORD NOT ON THE BOARD")
-      return
-    } else {
-      $("#clue-div").text("PLEASE ENTER A CLUE")
+      $("#clue-word").val("");
+      $("#clue-number").val(0);
     }
 
-  }
-    
   });
 
   socket.on('clueReceive', function (data) {
@@ -230,13 +228,13 @@
     $("#clue-div").text("Please enter your next clue.")
   })
 
-  socket.on('youLost', function(data) {
+  socket.on('youLost', function (data) {
     console.log('YOU LOST')
     $("#gameover-modal").modal("show");
 
   })
 
-  socket.on('youWon', function(data) {
+  socket.on('youWon', function (data) {
     console.log('YOU WON')
     $("#endgame-modal").modal("show");
   })
@@ -364,10 +362,10 @@
       $(".validate-add").text("Please enter a word before submitting.");
     } else {
 
-    $.post("/api/newwords", newWord);
-    $(".validate-add").text("Word Successfully Added!");
+      $.post("/api/newwords", newWord);
+      $(".validate-add").text("Word Successfully Added!");
+    }
   }
-}
 
   $(document).on("click", ".db-submit", insertWord);
 
