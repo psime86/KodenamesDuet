@@ -360,9 +360,14 @@
       word: $(".new-word").val().trim()
     };
 
+    if (newWord.word == "") {
+      $(".validate-add").text("Please enter a word before submitting.");
+    } else {
+
     $.post("/api/newwords", newWord);
     $(".validate-add").text("Word Successfully Added!");
   }
+}
 
   $(document).on("click", ".db-submit", insertWord);
 
