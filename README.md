@@ -38,14 +38,18 @@ The two person sessions are created using socket.io.
 <hr>
 
 <h5>Screenshots and Demo of Kodenames Digital</h5>
+<br>
 
 <img src="public/images/Kodesnames-start.png"></img>
+<br>
 
 <img src="public/images/Kodenames-guesser.png"></img>
+<br>
 
 <img src="public/images/Kodenames-spymaster.png"></img>
-
+<br>
 <img src="public/images/Kodenames Duet - Guesser.gif"></img>
+<br>
 
 Video Demo of Code Names Duet the original board game: 
 (we have nothing to do with this video or its content)
