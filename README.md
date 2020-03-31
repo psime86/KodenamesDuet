@@ -56,6 +56,12 @@ Video Demo of Code Names Duet the original board game:
 
 https://www.youtube.com/watch?v=C8NKRosF6Vo
 
+<hr>
+
+Check out Kodenames Digital on Heroku
+
+http://kodenames-duet-007.herokuapp.com/
+
 
 
 
