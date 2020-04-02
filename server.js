@@ -26,7 +26,7 @@ require("./routes/htmlRoutes")(app);
   socket.on('createGame', function (data) {
     console.log(data)
     socket.join(`room-${++rooms}`);
-    socket.emit('newGame', { name: data.players[0].name, team: data.players[0].team, role: data.players[0].role, room: `room-${rooms}`, words: data.words });
+    socket.emit('newGame', { name: data.players[0].name, team: data.players[0].team, role: data.players[0].role, room: `room-${rooms}`, words: data.words, players: data.players });
     console.log({ name: data.players[0].name, team: data.players[0].team, role: data.players[0].role, room: `room-${rooms}` })
   });
 
@@ -43,37 +43,46 @@ require("./routes/htmlRoutes")(app);
       socket.join(data.room);
       // socket.emit('player', { name: data.name, room: data.room })
       // console.log(data)
-      io.in(data.room).emit('redirect', {words: data.words, pattern: data.pattern})
+      io.in(data.room).emit('redirect', {words: data.words, pattern: data.pattern, divPattern: data.divPattern, room: data.room, players: data.players})
+      socket.to(data.room).emit('spyColors', {pattern: data.pattern})
 
     } else {
       socket.emit('err', { message: 'Sorry this room is full or does not exist!' })
     }
   });
 
-  socket.on('clickEvent', function (data) {
-    console.log('event received')
-    console.log(data)
-    socket.broadcast.emit('cardFlip', {cardFlipped: data.cardFlipped})
+  socket.on('spySetup', function(data) {
+    pattern = data.pattern
+    socket.to(data.room).emit('spyColors', {pattern})
   })
 
-  // socket.on('startGame', function(data) {
-  //   console.log(data)
-  //     var destination = '/game.html'
-  //     socket.broadcast.to(data.room).emit('redirect', destination)
-  // });
+  socket.on('clickEvent', function (data) {
+    console.log('event received')
 
-  socket.on('playTurn', function(data) {
-    socket.broadcast.to(data.room).emit('turnPlayed', {
-      tile: data.tile,
-      room: data.room
-    });
+    socket.to(data.room).emit('cardFlip', {cardFlipped: data.cardFlipped, room: data.room, words: data.words})
+  })
+
+  socket.on('clueSubmit', function(data) {
+    console.log(data)
+    socket.to(data.room).emit('clueReceive', {clueWord: data.clueWord, clueNumber: data.clueNumber, room: data.room})
+  })
+
+  socket.on('computerFlip', function(data) {
+    console.log(data)
+    flipId = data.flipId
+    socket.to(data.room).emit('cpuRedFlip', {flipId})
+  })
+
+  socket.on('gameLose', function(data) {
+    socket.to(data.room).emit('youLost', {lose: data.lose})
   });
 
-  socket.on('gameEnded', function(data) {
-    socket.broadcast.to(data.room).emit('gameEnded', data);
-  });
+  socket.on('gameEnd', function(data) {
+    socket.to(data.room).emit('youWon', {lose: data.lose})
+  })
 
-});
+})
+
 
 var syncOptions = { force: false };
 
